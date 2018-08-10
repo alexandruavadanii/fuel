@@ -1,0 +1,55 @@
+##############################################################################
+# Copyright (c) 2018 Mirantis Inc., Enea AB and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Apache License, Version 2.0
+# which accompanies this distribution, and is available at
+# http://www.apache.org/licenses/LICENSE-2.0
+##############################################################################
+{%- import 'net_map.j2' as nm with context %}
+{#- conf.MCPCONTROL_NET & co are mandatory, defaults are set via globals.sh #}
+{%- set net_mcpcontrol = [conf.MCPCONTROL_NET, conf.MCPCONTROL_PREFIX] | join("/") %}
+version: '2'
+services:
+  opnfv-fuel-salt-master:
+    container_name: "opnfv-fuel-salt-master"
+    image: "epcim/salt:saltmaster-ubuntu-xenial-salt-2017.7-formula-nightly"
+    networks:
+      - mcpcontrol
+      - mgmt
+      - pxebr
+    volumes:
+       - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro
+       - {{ conf.MCP_REPO_ROOT_PATH }}:/root/fuel
+       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/scripts/entrypoint.sh:/entrypoint.sh
+       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/scripts/hack.conf:/etc/salt/master.d/hack.conf
+       - {{ conf.MCP_STORAGE_DIR }}/pod_config.yml:/root/pod_config.yml
+       - {{ conf.MCP_STORAGE_DIR }}/base_image_opnfv_fuel_vcp.img:/srv/salt/env/prd/salt/files/control/images/base_image_opnfv_fuel_vcp.img
+    hostname: cfg01
+    domainname: {{ conf.cluster.domain }}
+    privileged: true
+networks:
+  mcpcontrol:
+    driver: macvlan
+    driver_opts:
+      parent: veth_mcp1
+    ipam:
+      config:
+        - subnet: {{ net_mcpcontrol }}
+          gateway: {{ net_mcpcontrol | ipnet_hostaddr(1) }}
+          ip_range: {{ [net_mcpcontrol | ipnet_hostaddr(2), conf.MCPCONTROL_PREFIX] | join("/") }}
+  mgmt:
+    driver: macvlan
+    driver_opts:
+      parent: veth_mcp3
+    ipam:
+      config:
+        - subnet: {{ nm.net_mgmt }}
+          ip_range: {{ [nm.net_mgmt | ipnet_hostaddr(2), nm.net_mgmt.split("/")[-1]] | join("/") }}
+  pxebr:
+    driver: macvlan
+    driver_opts:
+      parent: veth_mcp5
+    ipam:
+      config:
+        - subnet: {{ nm.net_admin }}
+          ip_range: {{ [nm.net_admin | ipnet_hostaddr(nm.start_ip[nm.net_admin] + nm.net_admin_hosts.index('opnfv_infra_config_pxe_admin_address') +1), nm.net_admin.split("/")[-1]] | join("/") }}
