@@ -57,6 +57,7 @@ OPNFV_FUEL_DIR="/root/fuel" # Should be in sync with patch.sh, scripts patches
 #?  ln -sf ${OPNFV_FUEL_DIR}/mcp/reclass /srv/salt
   ln -sf ${OPNFV_FUEL_DIR}/mcp/reclass/classes/cluster /srv/salt/reclass/classes/
   ln -sf ${OPNFV_FUEL_DIR}/mcp/reclass/classes/system /srv/salt/reclass/classes/
+  ln -sf ${OPNFV_FUEL_DIR}/mcp/reclass/nodes /srv/salt/reclass/
 
   ln -sf ${OPNFV_FUEL_DIR}/mcp/metadata/service/* /srv/salt/reclass/classes/service/
 #?  cp -r ${OPNFV_FUEL_DIR}/mcp/metadata/service /usr/share/salt-formulas/reclass
@@ -120,6 +121,9 @@ OPNFV_FUEL_DIR="/root/fuel" # Should be in sync with patch.sh, scripts patches
   ####fi
 ##SALT_INSTALL_END
 
+
+#### FIXME
+service salt-minion start
 
 if [[ $# -lt 1 ]] || [[ "$1" == "--"* ]]; then
     exec /usr/bin/salt-master --log-file-level=quiet --log-level=info "$@"
