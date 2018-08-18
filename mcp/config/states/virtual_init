@@ -114,7 +114,7 @@ NODE_MASK="${LOCAL_VIRT_NODES// /|}"
 #!@#>!@#>!@#  fi
 
   # Init specific to VMs on FN (all for virtual, cfg|mas for baremetal)
-  #### FIXME #### wait_for 3.0 'salt -C "cfg01*" state.apply linux'
+  wait_for 3.0 'salt-call state.apply linux'
   if [[ "${LOCAL_VIRT_NODES}" =~ mas ]]; then
     wait_for 3.0 'salt -C "mas*" test.ping'
   else
