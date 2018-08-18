@@ -17,13 +17,16 @@ services:
       - mcpcontrol
       - mgmt
     volumes:
+       # DBUS workaround - is it worth it? it might break more than help
        - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro
+       # Fuel@OPNFV git repo mapped inside the container
        - {{ conf.MCP_REPO_ROOT_PATH }}:/root/fuel
        - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/scripts/mcp.rsa:/root/fuel/mcp.rsa
        - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/scripts/entrypoint.sh:/entrypoint.sh
-       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/reclass/classes/cluster:/srv/salt/reclass/classes/cluster
-       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/reclass/classes/system:/srv/salt/reclass/classes/system
-       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/reclass/nodes:/srv/salt/reclass/nodes
+       ### ? ARG RECLASS_BASE="/srv/salt/reclass"
+       ### ignore ARG SALTCLASS_BASE="/srv/salt/saltclass"
+       ### VOLUME [ "/etc/salt/pki" "/srv/salt/env" "/srv/salt/pillar" "$RECLASS_BASE" "$SALTCLASS_BASE" ]
+       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/reclass:/srv/salt/reclass
        - {{ conf.MCP_STORAGE_DIR }}/pod_config.yml:/root/fuel/mcp/reclass/classes/cluster/all-mcp-arch-common/opnfv/pod_config.yml
        - {{ conf.MCP_STORAGE_DIR }}/base_image_opnfv_fuel_vcp.img:/srv/salt/env/prd/salt/files/control/images/base_image_opnfv_fuel_vcp.img
     hostname: cfg01
