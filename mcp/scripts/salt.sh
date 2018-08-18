@@ -29,15 +29,15 @@ NODE_MASK="${LOCAL_VIRT_NODES// /|}"
 # push to cfg01 current git repo first (including submodules), at ~ubuntu/opnfv
 # later we move it to ~root/opnfv (and ln as ~root/fuel); delete the temp clone
 remote_tmp="${SSH_SALT}:$(basename "${OPNFV_TMP_DIR}")"
-STORAGE_DIR=$(dirname "${LOCAL_PDF_RECLASS}")
-REL_STORAGE_DIR_PATH=${STORAGE_DIR#${LOCAL_GIT_DIR}}
-if [[ "${REL_STORAGE_DIR_PATH}" == "${STORAGE_DIR}" ]]
-then
-  REL_STORAGE_DIR_PATH=""
-fi
-rsync -Erl --delete -e "ssh ${SSH_OPTS}" \
-  --exclude={.gitignore,"$REL_STORAGE_DIR_PATH"} \
-  "${LOCAL_GIT_DIR}/" "${remote_tmp}/"
+#STORAGE_DIR=$(dirname "${LOCAL_PDF_RECLASS}")
+#REL_STORAGE_DIR_PATH=${STORAGE_DIR#${LOCAL_GIT_DIR}}
+#if [[ "${REL_STORAGE_DIR_PATH}" == "${STORAGE_DIR}" ]]
+#then
+#  REL_STORAGE_DIR_PATH=""
+#fi
+#rsync -Erl --delete -e "ssh ${SSH_OPTS}" \
+#  --exclude={.gitignore,"$REL_STORAGE_DIR_PATH"} \
+#  "${LOCAL_GIT_DIR}/" "${remote_tmp}/"
 if [ -n "${LOCAL_PDF_RECLASS}" ] && [ -f "${LOCAL_PDF_RECLASS}" ]; then
   rsync -e "ssh ${SSH_OPTS}" "${LOCAL_PDF_RECLASS}" \
     "${remote_tmp}${F_GIT_SUBD}/mcp/${OPNFV_RDIR}/opnfv/"

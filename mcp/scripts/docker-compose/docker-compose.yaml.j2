@@ -16,7 +16,8 @@ services:
     networks:
       - mcpcontrol
       - mgmt
-#    volumes:
+    volumes:
+       - {{ conf.MCP_REPO_ROOT_PATH }}:/root/fuel
 #      - ./certs:/etc/ssl/certs/
 networks:
   mcpcontrol:
