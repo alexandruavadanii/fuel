@@ -14,7 +14,7 @@ classes:
 {%- if nm.cluster.has_baremetal_nodes %}
   - system.reclass.storage.system.infra_maas_single
 {%- endif %}
- - system.salt.master.api
+  - system.salt.master.api
 #### master.single is half overriden by us anyway ...
 #  - system.salt.master.single
   - system.salt.master.pkg
