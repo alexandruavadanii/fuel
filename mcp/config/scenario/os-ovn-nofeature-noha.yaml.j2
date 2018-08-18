@@ -10,6 +10,7 @@
 cluster:
   domain: mcp-ovn-noha.local
   states:
+    - virtual_init
 {%- if nm.cluster.has_baremetal_nodes %}
     - maas
     - baremetal_init
