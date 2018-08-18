@@ -70,48 +70,48 @@ NODE_MASK="${LOCAL_VIRT_NODES// /|}"
   ### OARE FIXME?
   ### ln -sf ${OPNFV_GIT_DIR}${F_GIT_SUBD} ${OPNFV_FUEL_DIR}
 ##################################################################################
-  ln -sf ${OPNFV_FUEL_DIR}/mcp/reclass /srv/salt
+###  ln -sf ${OPNFV_FUEL_DIR}/mcp/reclass /srv/salt
 
   ### OBSOLETE?
   #### ln -sf ${OPNFV_FUEL_DIR}/mcp/deploy/scripts /srv/salt
 
   #### ln -sf ${OPNFV_FUEL_DIR}/mcp/scripts/mcp.rsa $(dirname "${OPNFV_FUEL_DIR}")
 
-  cp -r ${OPNFV_FUEL_DIR}/mcp/metadata/service /usr/share/salt-formulas/reclass
-  cd /srv/salt/reclass/classes/service && \
-    ln -sf /usr/share/salt-formulas/reclass/service/opendaylight
-
+####?#?#?#?#?#?#!!!!  cp -r ${OPNFV_FUEL_DIR}/mcp/metadata/service /usr/share/salt-formulas/reclass
+####?#?#?#?#?#?#!!!!  cd /srv/salt/reclass/classes/service && \
+####?#?#?#?#?#?#!!!!    ln -sf /usr/share/salt-formulas/reclass/service/opendaylight
+####?#?#?#?#?#?#!!!!
   # Armband APT-MK nightly/extra repo for forked & extended reclass
-  wget -qO - https://linux.enea.com/apt-mk/public.gpg | apt-key add -
-  echo 'deb http://linux.enea.com/apt-mk/xenial nightly extra' > \
-    '/etc/apt/sources.list.d/armband_mcp_extra.list'
-  apt-get update
+#!@#!@#!@#!@#  wget -qo - https://linux.enea.com/apt-mk/public.gpg | apt-key add -
+#!@#!@#!@#!@#  echo 'deb http://linux.enea.com/apt-mk/xenial nightly extra' > \
+#!@#!@#!@#!@#    '/etc/apt/sources.list.d/armband_mcp_extra.list'
+#!@#!@#!@#!@#  apt-get update
+#!@#!@#!@#!@#
+#!@#!@#!@#!@#  cd /srv/salt/scripts
+#!@#!@#!@#!@#  export debian_frontend=noninteractive
+#!@#!@#!@#!@#  echo 'dpkg::use-pty "0";' > /etc/apt/apt.conf.d/90silence-dpkg
+#!@#!@#!@#!@#  OLD_DOMAIN=\$(grep -sPzo "id: cfg01\.\K(\S*)" /etc/salt/minion.d/minion.conf) || true
+#!@#!@#!@#!@#  BOOTSTRAP_SALTSTACK_OPTS=" -r -dX stable 2017.7 " \
+#!@#!@#!@#!@#    MASTER_HOSTNAME=cfg01.${CLUSTER_DOMAIN} DISTRIB_REVISION=nightly \
+#!@#!@#!@#!@#      EXTRA_FORMULAS="nfs panko gnocchi oslo-templates" \
+#!@#!@#!@#!@#        ./salt-master-init.sh
+#!@#!@#!@#!@#  salt-key -Ay
 
-  cd /srv/salt/scripts
-  export DEBIAN_FRONTEND=noninteractive
-  echo 'Dpkg::Use-Pty "0";' > /etc/apt/apt.conf.d/90silence-dpkg
-  OLD_DOMAIN=\$(grep -sPzo "id: cfg01\.\K(\S*)" /etc/salt/minion.d/minion.conf) || true
-  BOOTSTRAP_SALTSTACK_OPTS=" -r -dX stable 2017.7 " \
-    MASTER_HOSTNAME=cfg01.${CLUSTER_DOMAIN} DISTRIB_REVISION=nightly \
-      EXTRA_FORMULAS="nfs panko gnocchi oslo-templates" \
-        ./salt-master-init.sh
-  salt-key -Ay
-
-  cp -r ${OPNFV_FUEL_DIR}/mcp/salt-formulas/* /usr/share/salt-formulas/env
-  cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list formulas
-  cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list reclass
+#@#@#@#@#@  cp -r ${OPNFV_FUEL_DIR}/mcp/salt-formulas/* /usr/share/salt-formulas/env
+#@#@#@#@#@  cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list formulas
+#@#@#@#@#@  cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list reclass
 
   source ${OPNFV_FUEL_DIR}/mcp/scripts/lib.sh
   wait_for 3.0 "salt-call state.apply salt"
 
-  # In case scenario changed (and implicitly domain name), re-register minions
-  if [ -n "\${OLD_DOMAIN}" ] && [ "\${OLD_DOMAIN}" != "${CLUSTER_DOMAIN}" ]; then
-    salt "*.\${OLD_DOMAIN}" cmd.run "grep \${OLD_DOMAIN} -sRl /etc/salt | \
-      xargs --no-run-if-empty sed -i 's/\${OLD_DOMAIN}/${CLUSTER_DOMAIN}/g'; \
-        service salt-minion restart" || true
-    salt-key -yd "*.\${OLD_DOMAIN}"
-    salt-key -Ay
-  fi
+#!@#>!@#>!@#  # In case scenario changed (and implicitly domain name), re-register minions
+#!@#>!@#>!@#  if [ -n "\${OLD_DOMAIN}" ] && [ "\${OLD_DOMAIN}" != "${CLUSTER_DOMAIN}" ]; then
+#!@#>!@#>!@#    salt "*.\${OLD_DOMAIN}" cmd.run "grep \${OLD_DOMAIN} -sRl /etc/salt | \
+#!@#>!@#>!@#      xargs --no-run-if-empty sed -i 's/\${OLD_DOMAIN}/${CLUSTER_DOMAIN}/g'; \
+#!@#>!@#>!@#        service salt-minion restart" || true
+#!@#>!@#>!@#    salt-key -yd "*.\${OLD_DOMAIN}"
+#!@#>!@#>!@#    salt-key -Ay
+#!@#>!@#>!@#  fi
 
   # Init specific to VMs on FN (all for virtual, cfg|mas for baremetal)
   wait_for 3.0 'salt -C "cfg01*" state.apply linux'
