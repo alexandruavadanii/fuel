@@ -11,30 +11,31 @@
 # Wrapper script for setting up prerequisites and launching Salt Master
 #
 
+# FIMXE: rm
 # shellcheck disable=SC1090
 [ -n "${SSH_OPTS}" ] || source "$(dirname "${BASH_SOURCE[0]}")/globals.sh"
 
 DOCKER_COMPOSE_DIR='./docker-compose'
 
-cd "./docker-compose" || exit 1
+##cd "${DOCKER_COMPOSE_DIR}" || exit 1
 
-export ENV_FILE="${ci}/job/admin.rc"
-export CARBON_DIR="${ci}/job/carbon/"
-
-if [ ! -d "${ci}/job/carbon" ]
-then
-    mkdir -p "${ci}/job/carbon"
-fi
-
-ARCH="${ARCH:-$(uname -m)}"
-export ARCH
-
-DOCKER_TAG="${DOCKER_TAG:-latest}"
-
-export TAG="${ARCH}-${DOCKER_TAG}"
-
-docker-compose pull
-docker-compose up -d
+###export ENV_FILE="${ci}/job/admin.rc"
+###export CARBON_DIR="${ci}/job/carbon/"
+###
+###if [ ! -d "${ci}/job/carbon" ]
+###then
+###    mkdir -p "${ci}/job/carbon"
+###fi
+###
+###ARCH="${ARCH:-$(uname -m)}"
+###export ARCH
+###
+###DOCKER_TAG="${DOCKER_TAG:-latest}"
+###
+###export TAG="${ARCH}-${DOCKER_TAG}"
+###
+###docker-compose pull
+docker-compose up -d -p "${DOCKER_COMPOSE_DIR}"
 
 echo "Waiting for StorPerf to become active"
 
