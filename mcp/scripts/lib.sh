@@ -397,14 +397,14 @@ function create_veth_pairs {
   # create veth pairs for relevant networks (mcpcontrol, mgmt)
 #  for net in "mcpcontrol" "${vnode_networks[1]}"; do
 #FIXME: check already exists
-  sudo ip link add veth_mcp0 type veth peer name veth_mcp1
-  sudo ip link add veth_mcp2 type veth peer name veth_mcp3
+  sudo ip link add veth_mcp0 type veth peer name veth_mcp1 || true
+  sudo ip link add veth_mcp2 type veth peer name veth_mcp3 || true
   sudo ip link set veth_mcp0 up
   sudo ip link set veth_mcp1 up
   sudo ip link set veth_mcp2 up
   sudo ip link set veth_mcp3 up
-  sudo brctl addif mcpcontrol veth_mcp0
-  sudo brctl addif "${vnode_networks[1]}" veth_mcp2
+  sudo brctl addif mcpcontrol veth_mcp0 || true
+  sudo brctl addif "${vnode_networks[1]}" veth_mcp2 || true
 }
 
 function create_vms {
