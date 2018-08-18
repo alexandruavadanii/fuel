@@ -56,19 +56,24 @@ ssh ${SSH_OPTS} "${SSH_SALT}" bash -s -e << SALT_INSTALL_END
   export TERM=${TERM}
   export CI_DEBUG=${CI_DEBUG}; [[ "${CI_DEBUG}" =~ (false|0) ]] || set -x
 
-  echo -n 'Checking out cloud-init has finished running ...'
-  while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo -n '.'; sleep 1; done
-  echo ' done'
+  ### echo -n 'Checking out cloud-init has finished running ...'
+  #### while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo -n '.'; sleep 1; done
+  #### echo ' done'
 
   mkdir -p /srv/salt /usr/share/salt-formulas/reclass
-  rm -rf ${OPNFV_GIT_DIR} ${OPNFV_FUEL_DIR}
-  mv ${OPNFV_TMP_DIR} ${OPNFV_GIT_DIR} && chown -R root.root ${OPNFV_GIT_DIR}
-  find ${OPNFV_GIT_DIR} -name '.git' -type f | while read f_git; do
-    sed -i 's@${LOCAL_GIT_DIR}@${OPNFV_GIT_DIR}@g' \$f_git
-  done
-  ln -sf ${OPNFV_GIT_DIR}${F_GIT_SUBD} ${OPNFV_FUEL_DIR}
+  ### rm -rf ${OPNFV_GIT_DIR} ${OPNFV_FUEL_DIR}
+  ### mv ${OPNFV_TMP_DIR} ${OPNFV_GIT_DIR} && chown -R root.root ${OPNFV_GIT_DIR}
+  ### find ${OPNFV_GIT_DIR} -name '.git' -type f | while read f_git; do
+  ###  sed -i 's@${LOCAL_GIT_DIR}@${OPNFV_GIT_DIR}@g' \$f_git
+  ### done
+
+
+  ### OARE FIXME?
+  ### ln -sf ${OPNFV_GIT_DIR}${F_GIT_SUBD} ${OPNFV_FUEL_DIR}
   ln -sf ${OPNFV_FUEL_DIR}/mcp/reclass /srv/salt
-  ln -sf ${OPNFV_FUEL_DIR}/mcp/deploy/scripts /srv/salt
+
+  ### OBSOLETE?
+  #### ln -sf ${OPNFV_FUEL_DIR}/mcp/deploy/scripts /srv/salt
   ln -sf ${OPNFV_FUEL_DIR}/mcp/scripts/mcp.rsa $(dirname "${OPNFV_FUEL_DIR}")
 
   cp -r ${OPNFV_FUEL_DIR}/mcp/metadata/service /usr/share/salt-formulas/reclass
