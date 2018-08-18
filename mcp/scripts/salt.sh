@@ -17,7 +17,7 @@ F_GIT_SUBD=${F_GIT_ROOT#${F_GIT_DIR%%/.git*}}
 OPNFV_TMP_DIR="/home/${SALT_MASTER_USER}/opnfv"
 OPNFV_GIT_DIR="/root/opnfv"
 OPNFV_FUEL_DIR="/root/fuel" # Should be in sync with patch.sh, scripts patches
-OPNFV_RDIR="reclass/classes/cluster/all-mcp-arch-common"
+#OPNFV_RDIR="reclass/classes/cluster/all-mcp-arch-common"
 OPNFV_VCP_IMG="mcp/scripts/base_image_opnfv_fuel_vcp.img"
 OPNFV_VCP_DIR="/srv/salt/env/prd/salt/files/control/images"
 LOCAL_GIT_DIR="${F_GIT_ROOT%${F_GIT_SUBD}}"
@@ -38,10 +38,10 @@ remote_tmp="${SSH_SALT}:$(basename "${OPNFV_TMP_DIR}")"
 #rsync -Erl --delete -e "ssh ${SSH_OPTS}" \
 #  --exclude={.gitignore,"$REL_STORAGE_DIR_PATH"} \
 #  "${LOCAL_GIT_DIR}/" "${remote_tmp}/"
-if [ -n "${LOCAL_PDF_RECLASS}" ] && [ -f "${LOCAL_PDF_RECLASS}" ]; then
-  rsync -e "ssh ${SSH_OPTS}" "${LOCAL_PDF_RECLASS}" \
-    "${remote_tmp}${F_GIT_SUBD}/mcp/${OPNFV_RDIR}/opnfv/"
-fi
+#if [ -n "${LOCAL_PDF_RECLASS}" ] && [ -f "${LOCAL_PDF_RECLASS}" ]; then
+#  rsync -e "ssh ${SSH_OPTS}" "${LOCAL_PDF_RECLASS}" \
+#    "${remote_tmp}${F_GIT_SUBD}/mcp/${OPNFV_RDIR}/opnfv/"
+#fi
 local_vcp_img=$(dirname "${LOCAL_PDF_RECLASS}")/$(basename "${OPNFV_VCP_IMG}")
 if [ -e "${local_vcp_img}" ]; then
   rsync -L -e "ssh ${SSH_OPTS}" "${local_vcp_img}" \
@@ -74,7 +74,8 @@ ssh ${SSH_OPTS} "${SSH_SALT}" bash -s -e << SALT_INSTALL_END
 
   ### OBSOLETE?
   #### ln -sf ${OPNFV_FUEL_DIR}/mcp/deploy/scripts /srv/salt
-  ln -sf ${OPNFV_FUEL_DIR}/mcp/scripts/mcp.rsa $(dirname "${OPNFV_FUEL_DIR}")
+
+  #### ln -sf ${OPNFV_FUEL_DIR}/mcp/scripts/mcp.rsa $(dirname "${OPNFV_FUEL_DIR}")
 
   cp -r ${OPNFV_FUEL_DIR}/mcp/metadata/service /usr/share/salt-formulas/reclass
   cd /srv/salt/reclass/classes/service && \
