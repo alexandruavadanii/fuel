@@ -496,7 +496,9 @@ function start_vms {
 }
 
 function start_containers {
-  docker-compose up -d -f docker-compose/docker-compose.yaml
+	# FIXME?
+  docker-compose -f docker-compose/docker-compose.yaml down
+  docker-compose -f docker-compose/docker-compose.yaml up --force-recreate --quiet-pull -d
 }
 
 function check_connection {
