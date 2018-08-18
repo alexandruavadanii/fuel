@@ -11,24 +11,24 @@
 #
 
 CI_DEBUG=${CI_DEBUG:-0}; [[ "${CI_DEBUG}" =~ (false|0) ]] || set -x
-F_GIT_ROOT=$(git rev-parse --show-toplevel)
-F_GIT_DIR=$(cd "${F_GIT_ROOT}/mcp" && git rev-parse --git-dir)
-F_GIT_SUBD=${F_GIT_ROOT#${F_GIT_DIR%%/.git*}}
-OPNFV_TMP_DIR="/home/${SALT_MASTER_USER}/opnfv"
+#F_GIT_ROOT=$(git rev-parse --show-toplevel)
+#F_GIT_DIR=$(cd "${F_GIT_ROOT}/mcp" && git rev-parse --git-dir)
+#F_GIT_SUBD=${F_GIT_ROOT#${F_GIT_DIR%%/.git*}}
+####OPNFV_TMP_DIR="/home/${SALT_MASTER_USER}/opnfv"
 OPNFV_GIT_DIR="/root/opnfv"
 OPNFV_FUEL_DIR="/root/fuel" # Should be in sync with patch.sh, scripts patches
 #OPNFV_RDIR="reclass/classes/cluster/all-mcp-arch-common"
-OPNFV_VCP_IMG="mcp/scripts/base_image_opnfv_fuel_vcp.img"
-OPNFV_VCP_DIR="/srv/salt/env/prd/salt/files/control/images"
-LOCAL_GIT_DIR="${F_GIT_ROOT%${F_GIT_SUBD}}"
-LOCAL_PDF_RECLASS=$1; shift
+####OPNFV_VCP_IMG="mcp/scripts/base_image_opnfv_fuel_vcp.img"
+####OPNFV_VCP_DIR="/srv/salt/env/prd/salt/files/control/images"
+####LOCAL_GIT_DIR="${F_GIT_ROOT%${F_GIT_SUBD}}"
+#############LOCAL_PDF_RECLASS=$1; shift
 # shellcheck disable=SC2116,SC2086
 LOCAL_VIRT_NODES=$(echo ${*//cfg01/}) # unquoted to filter space
 NODE_MASK="${LOCAL_VIRT_NODES// /|}"
 
 # push to cfg01 current git repo first (including submodules), at ~ubuntu/opnfv
 # later we move it to ~root/opnfv (and ln as ~root/fuel); delete the temp clone
-remote_tmp="${SSH_SALT}:$(basename "${OPNFV_TMP_DIR}")"
+####remote_tmp="${SSH_SALT}:$(basename "${OPNFV_TMP_DIR}")"
 #STORAGE_DIR=$(dirname "${LOCAL_PDF_RECLASS}")
 #REL_STORAGE_DIR_PATH=${STORAGE_DIR#${LOCAL_GIT_DIR}}
 #if [[ "${REL_STORAGE_DIR_PATH}" == "${STORAGE_DIR}" ]]
@@ -42,11 +42,11 @@ remote_tmp="${SSH_SALT}:$(basename "${OPNFV_TMP_DIR}")"
 #  rsync -e "ssh ${SSH_OPTS}" "${LOCAL_PDF_RECLASS}" \
 #    "${remote_tmp}${F_GIT_SUBD}/mcp/${OPNFV_RDIR}/opnfv/"
 #fi
-local_vcp_img=$(dirname "${LOCAL_PDF_RECLASS}")/$(basename "${OPNFV_VCP_IMG}")
-if [ -e "${local_vcp_img}" ]; then
-  rsync -L -e "ssh ${SSH_OPTS}" "${local_vcp_img}" \
-    "${remote_tmp}${F_GIT_SUBD}/${OPNFV_VCP_IMG}"
-fi
+#####local_vcp_img=$(dirname "${LOCAL_PDF_RECLASS}")/$(basename "${OPNFV_VCP_IMG}")
+#####if [ -e "${local_vcp_img}" ]; then
+#####  rsync -L -e "ssh ${SSH_OPTS}" "${local_vcp_img}" \
+#####    "${remote_tmp}${F_GIT_SUBD}/${OPNFV_VCP_IMG}"
+#####fi
 
 # ssh to cfg01
 # shellcheck disable=SC2086,2087
@@ -56,11 +56,12 @@ ssh ${SSH_OPTS} "${SSH_SALT}" bash -s -e << SALT_INSTALL_END
   export TERM=${TERM}
   export CI_DEBUG=${CI_DEBUG}; [[ "${CI_DEBUG}" =~ (false|0) ]] || set -x
 
+##################################################################################
   ### echo -n 'Checking out cloud-init has finished running ...'
   #### while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo -n '.'; sleep 1; done
   #### echo ' done'
 
-  mkdir -p /srv/salt /usr/share/salt-formulas/reclass
+###  mkdir -p /srv/salt /usr/share/salt-formulas/reclass
   ### rm -rf ${OPNFV_GIT_DIR} ${OPNFV_FUEL_DIR}
   ### mv ${OPNFV_TMP_DIR} ${OPNFV_GIT_DIR} && chown -R root.root ${OPNFV_GIT_DIR}
   ### find ${OPNFV_GIT_DIR} -name '.git' -type f | while read f_git; do
@@ -70,6 +71,7 @@ ssh ${SSH_OPTS} "${SSH_SALT}" bash -s -e << SALT_INSTALL_END
 
   ### OARE FIXME?
   ### ln -sf ${OPNFV_GIT_DIR}${F_GIT_SUBD} ${OPNFV_FUEL_DIR}
+##################################################################################
   ln -sf ${OPNFV_FUEL_DIR}/mcp/reclass /srv/salt
 
   ### OBSOLETE?
@@ -131,8 +133,8 @@ ssh ${SSH_OPTS} "${SSH_SALT}" bash -s -e << SALT_INSTALL_END
 
   wait_for 3.0 'salt -C "E@^(${NODE_MASK}|cfg01).*" state.sls ntp'
 
-  if [ -f "${OPNFV_FUEL_DIR}/${OPNFV_VCP_IMG}" ]; then
-    mkdir -p "${OPNFV_VCP_DIR}"
-    mv "${OPNFV_FUEL_DIR}/${OPNFV_VCP_IMG}" "${OPNFV_VCP_DIR}/"
-  fi
+  ####if [ -f "${OPNFV_FUEL_DIR}/${OPNFV_VCP_IMG}" ]; then
+  ####  mkdir -p "${OPNFV_VCP_DIR}"
+  ####  mv "${OPNFV_FUEL_DIR}/${OPNFV_VCP_IMG}" "${OPNFV_VCP_DIR}/"
+  ####fi
 SALT_INSTALL_END

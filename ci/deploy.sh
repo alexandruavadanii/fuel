@@ -303,7 +303,7 @@ else
     check_connection
 fi
 if [ ${USE_EXISTING_INFRA} -lt 2 ]; then
-    wait_for 5 "./salt.sh ${MCP_STORAGE_DIR}/pod_config.yml ${virtual_nodes[*]}"
+    wait_for 5 "./salt.sh ${virtual_nodes[*]}"
 fi
 
 # Openstack cluster setup
