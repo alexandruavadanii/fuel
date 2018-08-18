@@ -18,7 +18,7 @@ services:
       - mgmt
     volumes:
        - {{ conf.MCP_REPO_ROOT_PATH }}:/root/fuel
-#      - ./certs:/etc/ssl/certs/
+       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/scripts/mcp.rsa:/root/fuel/mcp.rsa
 networks:
   mcpcontrol:
     driver: macvlan
