@@ -495,6 +495,10 @@ function start_vms {
   done
 }
 
+function start_containers {
+  docker-compose up -d -f docker-compose/docker-compose.yaml
+}
+
 function check_connection {
   local total_attempts=60
   local sleep_time=5

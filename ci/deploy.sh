@@ -292,11 +292,13 @@ else
     prepare_vms "${base_image}" "${STORAGE_DIR}" "${virtual_repos_pkgs}" \
       "${virtual_nodes[@]}"
     create_libvirt_networks "${OPNFV_BRIDGES[@]}"
+    create_veth_pairs "${OPNFV_BRIDGES[@]}"
     do_sysctl_cfg
     do_udev_cfg
     create_vms "${STORAGE_DIR}" "${virtual_nodes_data}" "${OPNFV_BRIDGES[@]}"
     update_mcpcontrol_network
-    start_vms "${virtual_nodes[@]}"
+#    start_vms "${virtual_nodes[@]}"
+    start_containers
     check_connection
 fi
 if [ ${USE_EXISTING_INFRA} -lt 2 ]; then
