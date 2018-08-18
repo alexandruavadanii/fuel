@@ -600,5 +600,5 @@ function get_docker_cfg01_id {
 
 function run_docker_cfg01_cmd {
   get_docker_cfg01_id
-  docker exec -it "$@"
+  docker exec -it "${CFG01_ID}" "$@"
 }
