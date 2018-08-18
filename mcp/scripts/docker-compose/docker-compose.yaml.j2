@@ -20,6 +20,8 @@ services:
        - {{ conf.MCP_REPO_ROOT_PATH }}:/root/fuel
        - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/scripts/mcp.rsa:/root/fuel/mcp.rsa
        - {{ conf.MCP_STORAGE_DIR }}/pod_config.yml:/root/fuel/mcp/reclass/classes/cluster/all-mcp-arch-common/opnfv/pod_config.yml
+    hostname: cfg01
+    domainname: {{ conf.CLUSTER_DOMAIN }}
 networks:
   mcpcontrol:
     driver: macvlan
