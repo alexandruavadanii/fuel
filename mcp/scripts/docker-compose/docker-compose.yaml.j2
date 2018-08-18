@@ -17,6 +17,7 @@ services:
       - mcpcontrol
       - mgmt
     volumes:
+       - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro
        - {{ conf.MCP_REPO_ROOT_PATH }}:/root/fuel
        - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/scripts/mcp.rsa:/root/fuel/mcp.rsa
        - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/scripts/entrypoint.sh:/entrypoint.sh
