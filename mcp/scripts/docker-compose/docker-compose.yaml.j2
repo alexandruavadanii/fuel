@@ -27,6 +27,7 @@ services:
        - {{ conf.MCP_STORAGE_DIR }}/base_image_opnfv_fuel_vcp.img:/srv/salt/env/prd/salt/files/control/images/base_image_opnfv_fuel_vcp.img
     hostname: cfg01
     domainname: {{ conf.cluster.domain }}
+    privileged: true
 networks:
   mcpcontrol:
     driver: macvlan
