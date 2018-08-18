@@ -19,7 +19,7 @@ Signed-off-by: Delia Popescu <delia.popescu@enea.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/nova/files/queens/nova-compute.conf.Debian b/nova/files/queens/nova-compute.conf.Debian
-index d471a264..47a4e890 100644
+index d471a26..47a4e89 100644
 --- a/nova/files/queens/nova-compute.conf.Debian
 +++ b/nova/files/queens/nova-compute.conf.Debian
 @@ -5447,9 +5447,9 @@ api_servers = {{ compute.image.get('protocol', 'http') }}://{{ compute.image.hos

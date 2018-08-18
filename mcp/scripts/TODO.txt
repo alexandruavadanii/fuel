@@ -1,0 +1,2 @@
+- prereq pkgs
+- build docker & push to opnfv

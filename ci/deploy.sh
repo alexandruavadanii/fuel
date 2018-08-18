@@ -294,16 +294,18 @@ else
     prepare_vms "${base_image}" "${MCP_STORAGE_DIR}" "${virtual_repos_pkgs}" \
       "${virtual_nodes[@]}"
     create_libvirt_networks "${OPNFV_BRIDGES[@]}"
+    create_veth_pairs "${OPNFV_BRIDGES[@]}"
     do_sysctl_cfg
     do_udev_cfg
     create_vms "${MCP_STORAGE_DIR}" "${virtual_nodes_data}" "${OPNFV_BRIDGES[@]}"
     update_mcpcontrol_network
     start_vms "${virtual_nodes[@]}"
+    start_containers
     check_connection
 fi
-if [ ${USE_EXISTING_INFRA} -lt 2 ]; then
-    wait_for 5 "./salt.sh ${MCP_STORAGE_DIR}/pod_config.yml ${virtual_nodes[*]}"
-fi
+#if [ ${USE_EXISTING_INFRA} -lt 2 ]; then
+# FIXME
+#fi
 
 # Openstack cluster setup
 set +x
@@ -313,9 +315,9 @@ else
     for state in "${cluster_states[@]}"; do
         notify "[STATE] Applying state: ${state}" 2
         # shellcheck disable=SC2086,2029
-        wait_for 5 "ssh ${SSH_OPTS} ${SSH_SALT} sudo \
-            CI_DEBUG=$CI_DEBUG ERASE_ENV=$ERASE_ENV \
-            /root/fuel/mcp/config/states/${state}"
+####        wait_for 5 "ssh ${SSH_OPTS} ${SSH_SALT} sudo \
+        wait_for 5 "docker exec -it -e CI_DEBUG=$CI_DEBUG -e ERASE_ENV=$ERASE_ENV \
+            $(get_docker_cfg01_id) /root/fuel/mcp/config/states/${state}"
         if [ "${state}" = 'maas' ]; then
             # For hybrid PODs (virtual + baremetal nodes), the virtual nodes
             # should be reset to force a DHCP request from MaaS DHCP

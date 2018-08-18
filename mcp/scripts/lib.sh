@@ -225,7 +225,8 @@ function cleanup_mounts {
 
 function cleanup_uefi {
   # Clean up Ubuntu boot entry if cfg01, kvm nodes online from previous deploy
-  local cmd_str="ssh ${SSH_OPTS} ${SSH_SALT}"
+  ### local cmd_str="ssh ${SSH_OPTS} ${SSH_SALT}"
+  local cmd_str="docker exec -it $(get_docker_cfg01_id)"
   ping -c 1 -w 1 "${SALT_MASTER}" || return 0
   [ ! "$(hostname)" = 'cfg01' ] || cmd_str='eval'
   ${cmd_str} "sudo salt -C 'kvm* or cmp*' cmd.run \
@@ -465,17 +466,15 @@ function create_vms {
 
 function update_mcpcontrol_network {
   # set static ip address for salt master node, MaaS node
-  local cmac=$(virsh domiflist cfg01 2>&1| awk '/mcpcontrol/ {print $5; exit}')
   local amac=$(virsh domiflist mas01 2>&1| awk '/mcpcontrol/ {print $5; exit}')
-  virsh net-update "mcpcontrol" add ip-dhcp-host \
-    "<host mac='${cmac}' name='cfg01' ip='${SALT_MASTER}'/>" --live --config
   [ -z "${amac}" ] || virsh net-update "mcpcontrol" add ip-dhcp-host \
     "<host mac='${amac}' name='mas01' ip='${MAAS_IP}'/>" --live --config
 }
 
 function reset_vms {
   local vnodes=("$@")
-  local cmd_str="ssh ${SSH_OPTS} ${SSH_SALT}"
+  ### local cmd_str="ssh ${SSH_OPTS} ${SSH_SALT}"
+  local cmd_str="docker exec -it $(get_docker_cfg01_id)"
 
   # reset non-infrastructure vms, wait for them to come back online
   for node in "${vnodes[@]}"; do
@@ -500,6 +499,12 @@ function start_vms {
   done
 }
 
+function start_containers {
+	# FIXME?
+  docker-compose -f docker-compose/docker-compose.yaml down
+  docker-compose -f docker-compose/docker-compose.yaml up --force-recreate --quiet-pull -d
+}
+
 function check_connection {
   local total_attempts=60
   local sleep_time=5
@@ -510,11 +515,10 @@ function check_connection {
   # wait until ssh on Salt master is available
   # shellcheck disable=SC2034
   for attempt in $(seq "${total_attempts}"); do
-    # shellcheck disable=SC2086
-    ssh ${SSH_OPTS} "ubuntu@${SALT_MASTER}" uptime
+    run_docker_cfg01_cmd uptime
     case $? in
       0) echo "${attempt}> Success"; break ;;
-      *) echo "${attempt}/${total_attempts}> ssh server ain't ready yet, waiting for ${sleep_time} seconds ..." ;;
+      *) echo "${attempt}/${total_attempts}> not ready yet, waiting for ${sleep_time} seconds ..." ;;
     esac
     sleep $sleep_time
   done
@@ -601,4 +605,16 @@ function docker_install {
     # On RHEL distros, the Docker service should be explicitly started
     sudo systemctl start docker
   fi
+}
+
+function get_docker_cfg01_id {
+  if [ -z "${CFG01_ID}" ]; then
+    CFG01_ID="$(docker inspect opnfv-fuel-salt-master -f '{{.Id}}')"
+  fi
+  echo $CFG01_ID
+}
+
+function run_docker_cfg01_cmd {
+  get_docker_cfg01_id
+  docker exec -it "${CFG01_ID}" "$@"
 }

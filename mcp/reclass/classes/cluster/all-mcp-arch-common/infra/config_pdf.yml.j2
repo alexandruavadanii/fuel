@@ -8,14 +8,16 @@
 {%- import 'net_map.j2' as nm with context %}
 ---
 classes:
-  - service.git.client
-  - system.linux.system.repo.mcp.salt
+##### already in via system.salt.master.single####  - service.git.client
+##### already in  - system.linux.system.repo.mcp.salt
   - system.reclass.storage.salt
 {%- if nm.cluster.has_baremetal_nodes %}
   - system.reclass.storage.system.infra_maas_single
 {%- endif %}
   - system.salt.master.api
-  - system.salt.master.pkg
+#### master.single is half overriden by us anyway ...
+  - system.salt.master.single
+#  - system.salt.master.pkg
   - system.salt.minion.ca.salt_master
 parameters:
   _param:
@@ -29,6 +31,16 @@ parameters:
     master:
       accept_policy: open_mode
       file_recv: true
+  linux:
+    system:
+      user:
+        salt:
+          home: /home/salt
+      package:
+        kmod:
+          version: latest
+        gawk:
+          version: latest
   reclass:
     storage:
       data_source:
