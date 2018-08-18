@@ -505,11 +505,10 @@ function check_connection {
   # wait until ssh on Salt master is available
   # shellcheck disable=SC2034
   for attempt in $(seq "${total_attempts}"); do
-    # shellcheck disable=SC2086
-    ssh ${SSH_OPTS} "ubuntu@${SALT_MASTER}" uptime
+    run_docker_cfg01_cmd uptime
     case $? in
       0) echo "${attempt}> Success"; break ;;
-      *) echo "${attempt}/${total_attempts}> ssh server ain't ready yet, waiting for ${sleep_time} seconds ..." ;;
+      *) echo "${attempt}/${total_attempts}> not ready yet, waiting for ${sleep_time} seconds ..." ;;
     esac
     sleep $sleep_time
   done
@@ -585,4 +584,15 @@ function get_nova_compute_pillar_data {
   if [ "${value}" != "''" ]; then
     echo "${value}"
   fi
+}
+
+function get_docker_cfg01_id {
+  if [ -z "${CFG01_ID}" ]; then
+    CFG01_ID="$(docker inspect opnfv-fuel-salt-master -f '{{.Id}}')"
+  fi
+}
+
+function run_docker_cfg01_cmd {
+  get_docker_cfg01_id
+  docker exec -it "$@"
 }
