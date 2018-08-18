@@ -5,7 +5,9 @@
 # which accompanies this distribution, and is available at
 # http://www.apache.org/licenses/LICENSE-2.0
 ##############################################################################
-
+{%- import 'net_map.j2' as nm with context %}
+{#- conf.MCPCONTROL_NET & co are mandatory, defaults are set via globals.sh #}
+{%- set net_mcpcontrol = [conf.MCPCONTROL_NET, conf.MCPCONTROL_PREFIX] | join("/") %}
 version: '2'
 services:
   opnfv-fuel-salt-master:
@@ -23,15 +25,14 @@ networks:
       parent: veth_mcp1
     ipam:
       config:
-        - subnet: 10.20.0.0/24
-          gateway: 10.20.0.1
-          ip_range: 10.20.0.128/25 # IP from this pool are assigned automatically
+        - subnet: {{ net_mcpcontrol }}
+          gateway: {{ net_mcpcontrol | ipnet_hostaddr(1) }}
+          ip_range: {{ [net_mcpcontrol | ipnet_hostaddr(2), conf.MCPCONTROL_PREFIX] | join("/") }}
   mgmt:
     driver: macvlan
     driver_opts:
       parent: veth_mcp3
     ipam:
       config:
-        - subnet: 172.16.10.0/24
-          gateway: 172.16.10.1
-          ip_range: 172.16.10.128/25 # IP from this pool are assigned automatically
+        - subnet: {{ nm.net_mgmt }}
+          ip_range: {{ [nm.net_mgmt | ipnet_hostaddr(2), nm.net_mgmt.split("/")[-1]] | join("/") }}
