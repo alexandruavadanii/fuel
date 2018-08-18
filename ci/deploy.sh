@@ -302,9 +302,10 @@ else
     start_containers
     check_connection
 fi
-if [ ${USE_EXISTING_INFRA} -lt 2 ]; then
-    wait_for 5 "./salt.sh ${virtual_nodes[*]}"
-fi
+#if [ ${USE_EXISTING_INFRA} -lt 2 ]; then
+# FIXME
+#    wait_for 5 "./salt.sh ${virtual_nodes[*]}"
+#fi
 
 # Openstack cluster setup
 set +x
@@ -314,8 +315,8 @@ else
     for state in "${cluster_states[@]}"; do
         notify "[STATE] Applying state: ${state}" 2
         # shellcheck disable=SC2086,2029
-        wait_for 5 "ssh ${SSH_OPTS} ${SSH_SALT} sudo \
-            CI_DEBUG=$CI_DEBUG ERASE_ENV=$ERASE_ENV \
+####        wait_for 5 "ssh ${SSH_OPTS} ${SSH_SALT} sudo \
+        wait_for 5 "run_docker_cfg01_cmd CI_DEBUG=$CI_DEBUG ERASE_ENV=$ERASE_ENV \
             /root/fuel/mcp/config/states/${state}"
         if [ "${state}" = 'maas' ]; then
             # For hybrid PODs (virtual + baremetal nodes), the virtual nodes
