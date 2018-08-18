@@ -118,6 +118,9 @@ OPNFV_FUEL_DIR="/root/fuel" # Should be in sync with patch.sh, scripts patches
   ####fi
 ##SALT_INSTALL_END
 
+## ACAB
+sed -i "s|'Debian', 'Raspbian'|'Debian', 'Ubuntu', 'Raspbian'|" \
+    /usr/lib/python2.7/dist-packages/salt/modules/debian_service.py
 
 #### FIXME
 service salt-minion start
