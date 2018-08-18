@@ -290,15 +290,15 @@ elif [ ${USE_EXISTING_INFRA} -gt 0 ]; then
     notify "[NOTE] Use existing infra" 2
     check_connection
 else
-    #prepare_vms "${base_image}" "${MCP_STORAGE_DIR}" "${virtual_repos_pkgs}" \
-    #  "${virtual_nodes[@]}"
+    prepare_vms "${base_image}" "${MCP_STORAGE_DIR}" "${virtual_repos_pkgs}" \
+      "${virtual_nodes[@]}"
     create_libvirt_networks "${OPNFV_BRIDGES[@]}"
     create_veth_pairs "${OPNFV_BRIDGES[@]}"
     do_sysctl_cfg
     do_udev_cfg
-    #create_vms "${MCP_STORAGE_DIR}" "${virtual_nodes_data}" "${OPNFV_BRIDGES[@]}"
+    create_vms "${MCP_STORAGE_DIR}" "${virtual_nodes_data}" "${OPNFV_BRIDGES[@]}"
     update_mcpcontrol_network
-#    start_vms "${virtual_nodes[@]}"
+    start_vms "${virtual_nodes[@]}"
     start_containers
     check_connection
 fi
