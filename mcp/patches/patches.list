@@ -5,9 +5,9 @@
 # which accompanies this distribution, and is available at
 # http://www.apache.org/licenses/LICENSE-2.0
 ##############################################################################
-/usr/share/salt-formulas/env: 0002-maas-region-skip-credentials-update.patch
-/usr/share/salt-formulas/env: 0008-Handle-extra-environment-variables.patch
-/usr/share/salt-formulas/env: 0010-maas-region-allow-timeout-override.patch
-/usr/share/salt-formulas/env: 0011-system.repo-Debian-Add-keyserver-proxy-support.patch
-/usr/share/salt-formulas/env: 0015-Set-ovs-bridges-as-L3-interfaces.patch
-/usr/share/salt-formulas/env: 0016-Disable-glance-signature-verification.patch
+/srv/salt/env/prd: 0002-maas-region-skip-credentials-update.patch
+/srv/salt/env/prd: 0008-Handle-extra-environment-variables.patch
+/srv/salt/env/prd: 0010-maas-region-allow-timeout-override.patch
+/srv/salt/env/prd: 0011-system.repo-Debian-Add-keyserver-proxy-support.patch
+/srv/salt/env/prd: 0015-Set-ovs-bridges-as-L3-interfaces.patch
+/srv/salt/env/prd: 0016-Disable-glance-signature-verification.patch
