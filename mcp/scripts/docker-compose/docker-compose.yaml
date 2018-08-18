@@ -13,15 +13,25 @@ services:
     image: "epcim/salt:saltmaster-reclass-ubuntu-xenial-salt-2017.7-formula-master"
     networks:
       - mcpcontrol
+      - mgmt
 #    volumes:
 #      - ./certs:/etc/ssl/certs/
 networks:
   mcpcontrol:
     driver: macvlan
     driver_opts:
-      parent: alav2
+      parent: veth_mcp1
     ipam:
       config:
         - subnet: 10.20.0.0/24
           gateway: 10.20.0.1
           ip_range: 10.20.0.128/25 # IP from this pool are assigned automatically
+  mgmt:
+    driver: macvlan
+    driver_opts:
+      parent: veth_mcp3
+    ipam:
+      config:
+        - subnet: 172.16.10.0/24
+          gateway: 172.16.10.1
+          ip_range: 172.16.10.128/25 # IP from this pool are assigned automatically
