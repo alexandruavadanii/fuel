@@ -596,6 +596,7 @@ function get_docker_cfg01_id {
   if [ -z "${CFG01_ID}" ]; then
     CFG01_ID="$(docker inspect opnfv-fuel-salt-master -f '{{.Id}}')"
   fi
+  echo $CFG01_ID
 }
 
 function run_docker_cfg01_cmd {

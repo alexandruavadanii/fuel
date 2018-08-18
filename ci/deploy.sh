@@ -316,8 +316,8 @@ else
         notify "[STATE] Applying state: ${state}" 2
         # shellcheck disable=SC2086,2029
 ####        wait_for 5 "ssh ${SSH_OPTS} ${SSH_SALT} sudo \
-        wait_for 5 "run_docker_cfg01_cmd CI_DEBUG=$CI_DEBUG ERASE_ENV=$ERASE_ENV \
-            /root/fuel/mcp/config/states/${state}"
+        wait_for 5 "docker exec -it -e CI_DEBUG=$CI_DEBUG -e ERASE_ENV=$ERASE_ENV \
+            $(get_docker_cfg01_id) /root/fuel/mcp/config/states/${state}"
         if [ "${state}" = 'maas' ]; then
             # For hybrid PODs (virtual + baremetal nodes), the virtual nodes
             # should be reset to force a DHCP request from MaaS DHCP
