@@ -120,7 +120,8 @@ OPNFV_FUEL_DIR="/root/fuel" # Should be in sync with patch.sh, scripts patches
 
 ## ACAB
 # pfff
-sed -i "s|return 'start/running' in |return 'is running' in |" \
+sed -i -e "s|return 'start/running' in |return 'is running' in |" \
+       -e "s|ret = _default_runlevel|return _default_runlevel|" \
     /usr/lib/python2.7/dist-packages/salt/modules/upstart.py
 
 #### FIXME
