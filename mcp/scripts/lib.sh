@@ -374,7 +374,7 @@ function jumpserver_check_requirements {
   fi
 }
 
-function create_networks {
+function create_libvirt_networks {
   local vnode_networks=("$@")
   # create required networks, including constant "mcpcontrol"
   for net in "mcpcontrol" "${vnode_networks[@]}"; do
