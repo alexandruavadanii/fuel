@@ -293,7 +293,7 @@ elif [ ${USE_EXISTING_INFRA} -gt 0 ]; then
 else
     prepare_vms "${base_image}" "${MCP_STORAGE_DIR}" "${virtual_repos_pkgs}" \
       "${virtual_nodes[@]}"
-    create_networks "${OPNFV_BRIDGES[@]}"
+    create_libvirt_networks "${OPNFV_BRIDGES[@]}"
     do_sysctl_cfg
     do_udev_cfg
     create_vms "${MCP_STORAGE_DIR}" "${virtual_nodes_data}" "${OPNFV_BRIDGES[@]}"

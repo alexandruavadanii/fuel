@@ -375,7 +375,7 @@ function jumpserver_check_requirements {
   fi
 }
 
-function create_networks {
+function create_libvirt_networks {
   local vnode_networks=("$@")
   # create required networks, including constant "mcpcontrol"
   for net in "mcpcontrol" "${vnode_networks[@]}"; do
@@ -391,6 +391,25 @@ function create_networks {
       virsh net-start "${net}"
     fi
   done
+}
+
+function create_veth_pairs {
+  local vnode_networks=("$@")
+  # create veth pairs for relevant networks (mcpcontrol, mgmt)
+#  for net in "mcpcontrol" "${vnode_networks[1]}"; do
+#FIXME: check already exists
+  sudo ip link add veth_mcp0 type veth peer name veth_mcp1 || true
+  sudo ip link add veth_mcp2 type veth peer name veth_mcp3 || true
+  sudo ip link add veth_mcp4 type veth peer name veth_mcp5 || true
+  sudo ip link set veth_mcp0 up
+  sudo ip link set veth_mcp1 up
+  sudo ip link set veth_mcp2 up
+  sudo ip link set veth_mcp3 up
+  sudo ip link set veth_mcp4 up
+  sudo ip link set veth_mcp5 up
+  sudo brctl addif mcpcontrol veth_mcp0 || true
+  sudo brctl addif "${vnode_networks[1]}" veth_mcp2 || true
+  sudo brctl addif "${vnode_networks[0]}" veth_mcp4 || true
 }
 
 function create_vms {
