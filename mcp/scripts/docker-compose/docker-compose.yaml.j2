@@ -19,6 +19,7 @@ services:
     volumes:
        - {{ conf.MCP_REPO_ROOT_PATH }}:/root/fuel
        - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/scripts/mcp.rsa:/root/fuel/mcp.rsa
+       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/scripts/entrypoint.sh:/entrypoint.sh
        - {{ conf.MCP_STORAGE_DIR }}/pod_config.yml:/root/fuel/mcp/reclass/classes/cluster/all-mcp-arch-common/opnfv/pod_config.yml
        - {{ conf.MCP_STORAGE_DIR }}/base_image_opnfv_fuel_vcp.img:/srv/salt/env/prd/salt/files/control/images/base_image_opnfv_fuel_vcp.img
     hostname: cfg01
