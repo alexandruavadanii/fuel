@@ -123,11 +123,11 @@ EOF
 # BEGIN of variables to customize
 #
 CI_DEBUG=${CI_DEBUG:-0}; [[ "${CI_DEBUG}" =~ (false|0) ]] || set -x
-REPO_ROOT_PATH=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")/..")
-DEPLOY_DIR=$(cd "${REPO_ROOT_PATH}/mcp/scripts"; pwd)
-STORAGE_DIR=$(cd "${REPO_ROOT_PATH}/mcp/deploy/images"; pwd)
+MCP_REPO_ROOT_PATH=$(readlink -f "$(dirname "${BASH_SOURCE[0]}")/..")
+DEPLOY_DIR=$(cd "${MCP_REPO_ROOT_PATH}/mcp/scripts"; pwd)
+STORAGE_DIR=$(cd "${MCP_REPO_ROOT_PATH}/mcp/deploy/images"; pwd)
 URI_REGEXP='(file|https?|ftp)://.*'
-BASE_CONFIG_URI="file://${REPO_ROOT_PATH}/mcp/scripts/pharos"
+BASE_CONFIG_URI="file://${MCP_REPO_ROOT_PATH}/mcp/scripts/pharos"
 
 # Customize deploy workflow
 DRY_RUN=${DRY_RUN:-0}
@@ -251,7 +251,7 @@ fi
 ./sysinfo_print.sh
 
 # Clone git submodules and apply our patches
-make -C "${REPO_ROOT_PATH}/mcp/patches" deepclean patches-import
+make -C "${MCP_REPO_ROOT_PATH}/mcp/patches" deepclean patches-import
 
 # Check scenario file existence
 SCENARIO_DIR="$(readlink -f "../config/scenario")"
@@ -266,11 +266,11 @@ export MAAS_SSH_KEY="$(cat "$(basename "${SSH_KEY}").pub")"
 
 MCP_DPDK_MODE=$([[ "$DEPLOY_SCENARIO" =~ ovs ]] && echo 1 || echo 0)
 # Expand jinja2 templates based on PDF data and env vars
-export MCP_VCP MCP_DPDK_MODE MCP_JUMP_ARCH=$(uname -i)
+export MCP_REPO_ROOT_PATH MCP_VCP MCP_DPDK_MODE MCP_JUMP_ARCH=$(uname -i)
 do_templates_scenario "${STORAGE_DIR}" "${TARGET_LAB}" "${TARGET_POD}" \
                       "${BASE_CONFIG_URI}" "${SCENARIO_DIR}"
 do_templates_cluster  "${STORAGE_DIR}" "${TARGET_LAB}" "${TARGET_POD}" \
-                      "${REPO_ROOT_PATH}" \
+                      "${MCP_REPO_ROOT_PATH}" \
                       "${SCENARIO_DIR}/defaults.yaml" \
                       "${SCENARIO_DIR}/${DEPLOY_SCENARIO}.yaml"
 
