@@ -304,7 +304,6 @@ else
 fi
 #if [ ${USE_EXISTING_INFRA} -lt 2 ]; then
 # FIXME
-#    wait_for 5 "./salt.sh ${virtual_nodes[*]}"
 #fi
 
 # Openstack cluster setup
