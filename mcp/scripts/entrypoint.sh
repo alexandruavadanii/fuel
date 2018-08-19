@@ -16,7 +16,9 @@ OPNFV_FUEL_DIR="/root/fuel" # Should be in sync with patch.sh, scripts patches
 
 # wtf: FIXME: only yml files
 rm -rf "/srv/salt/reclass/nodes" "/srv/salt/reclass/classes/cluster" "/srv/salt/reclass/classes/system"
-cp -avr "${OPNFV_FUEL_DIR}/mcp/reclass" "/srv/salt/reclass"
+cp -avr "${OPNFV_FUEL_DIR}/mcp/reclass/nodes" "/srv/salt/reclass/nodes"
+cp -avr "${OPNFV_FUEL_DIR}/mcp/reclass/classes/cluster" "/srv/salt/reclass/classes/cluster"
+cp -avr "${OPNFV_FUEL_DIR}/mcp/reclass/classes/system" "/srv/salt/reclass/classes/system"
 cp -avr "${OPNFV_FUEL_DIR}/mcp/scripts/mcp.rsa" "/root/fuel/mcp.rsa"
 cp -avr "/root/pod_config.yml" "/srv/salt/reclass/classes/cluster/all-mcp-arch-common/opnfv/pod_config.yml"
 
