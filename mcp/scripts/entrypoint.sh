@@ -65,7 +65,7 @@ cp -avr "/root/pod_config.yml" "/srv/salt/reclass/classes/cluster/all-mcp-arch-c
 
 #?  ln -sf ${OPNFV_FUEL_DIR}/mcp/reclass /srv/salt
 
-  cp -avr ${OPNFV_FUEL_DIR}/mcp/metadata/service/* /srv/salt/reclass/classes/service/
+###  cp -avr ${OPNFV_FUEL_DIR}/mcp/metadata/service/* /srv/salt/reclass/classes/service/
 #?  cp -r ${OPNFV_FUEL_DIR}/mcp/metadata/service /usr/share/salt-formulas/reclass
 #  cd /srv/salt/reclass/classes/service && \
 #    ln -sf /usr/share/salt-formulas/reclass/service/opendaylight
