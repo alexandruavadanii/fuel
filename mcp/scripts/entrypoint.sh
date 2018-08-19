@@ -95,8 +95,8 @@ cp -avr "/root/pod_config.yml" "/srv/salt/reclass/classes/cluster/all-mcp-arch-c
   ln -sf /srv/salt/formula/salt-formulas/salt-formula-tacker/metadata/service \
          /srv/salt/reclass/classes/service/tacker
 
-  cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list formulas
-  cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list reclass
+#  cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list formulas
+#  cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list reclass
 
 ##?#?#?#  source ${OPNFV_FUEL_DIR}/mcp/scripts/lib.sh
 #????  wait_for 3.0 "salt-call state.apply salt"
