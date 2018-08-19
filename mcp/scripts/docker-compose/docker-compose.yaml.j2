@@ -16,6 +16,7 @@ services:
     networks:
       - mcpcontrol
       - mgmt
+      - pxebr
     volumes:
        - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro
        - {{ conf.MCP_REPO_ROOT_PATH }}:/root/fuel
@@ -44,3 +45,11 @@ networks:
       config:
         - subnet: {{ nm.net_mgmt }}
           ip_range: {{ [nm.net_mgmt | ipnet_hostaddr(2), nm.net_mgmt.split("/")[-1]] | join("/") }}
+  pxebr:
+    driver: macvlan
+    driver_opts:
+      parent: veth_mcp5
+    ipam:
+      config:
+        - subnet: {{ nm.net_admin }}
+          ip_range: {{ [nm.net_admin | ipnet_hostaddr(nm.start_ip[nm.net_admin] + nm.net_admin_hosts.index('opnfv_infra_config_pxe_admin_address') +1), nm.net_admin.split("/")[-1]] | join("/") }}
