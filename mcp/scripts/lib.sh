@@ -225,7 +225,8 @@ function cleanup_mounts {
 
 function cleanup_uefi {
   # Clean up Ubuntu boot entry if cfg01, kvm nodes online from previous deploy
-  local cmd_str="ssh ${SSH_OPTS} ${SSH_SALT}"
+  ### local cmd_str="ssh ${SSH_OPTS} ${SSH_SALT}"
+  local cmd_str="docker exec -it $(get_docker_cfg01_id)"
   ping -c 1 -w 1 "${SALT_MASTER}" || return 0
   [ ! "$(hostname)" = 'cfg01' ] || cmd_str='eval'
   ${cmd_str} "sudo salt -C 'kvm* or cmp*' cmd.run \
@@ -471,7 +472,8 @@ function update_mcpcontrol_network {
 
 function reset_vms {
   local vnodes=("$@")
-  local cmd_str="ssh ${SSH_OPTS} ${SSH_SALT}"
+  ### local cmd_str="ssh ${SSH_OPTS} ${SSH_SALT}"
+  local cmd_str="docker exec -it $(get_docker_cfg01_id)"
 
   # reset non-infrastructure vms, wait for them to come back online
   for node in "${vnodes[@]}"; do
