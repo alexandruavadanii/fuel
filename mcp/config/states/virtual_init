@@ -102,9 +102,9 @@ NODE_MASK="${LOCAL_VIRT_NODES// /|}"
 #@#@#@#@#@  cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list reclass
 
 
-  salt -C 'cfg01.*' state.sls reclass
   source ${OPNFV_FUEL_DIR}/mcp/scripts/lib.sh
   wait_for 3.0 "salt-call state.apply salt exclude='[{id: salt_master_service}]'"
+  wait_for 3.0 "salt -C 'cfg01.*' state.sls reclass"
 
 #!@#>!@#>!@#  # In case scenario changed (and implicitly domain name), re-register minions
 #!@#>!@#>!@#  if [ -n "\${OLD_DOMAIN}" ] && [ "\${OLD_DOMAIN}" != "${CLUSTER_DOMAIN}" ]; then
