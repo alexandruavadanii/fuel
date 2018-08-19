@@ -16,8 +16,8 @@ OPNFV_FUEL_DIR="/root/fuel" # Should be in sync with patch.sh, scripts patches
 
 # wtf: FIXME: only yml files
 cp -avr "${OPNFV_FUEL_DIR}/mcp/reclass/nodes" "/srv/salt/reclass/nodes"
-ln -sf "${OPNFV_FUEL_DIR}/mcp/reclass/classes/cluster" "/srv/salt/reclass/classes/cluster"
-ln -sf "${OPNFV_FUEL_DIR}/mcp/reclass/classes/system" "/srv/salt/reclass/classes/system"
+cp -avr "${OPNFV_FUEL_DIR}/mcp/reclass/classes/cluster" "/srv/salt/reclass/classes/cluster"
+cp -avr "${OPNFV_FUEL_DIR}/mcp/reclass/classes/system" "/srv/salt/reclass/classes/system"
 ln -sf "${OPNFV_FUEL_DIR}/mcp/scripts/mcp.rsa" "/root/fuel/mcp.rsa"
 ln -sf "/root/pod_config.yml" "/srv/salt/reclass/classes/cluster/all-mcp-arch-common/opnfv/pod_config.yml"
 
@@ -134,6 +134,7 @@ sed -i -e "s|return 'start/running' in |return 'is running' in |" \
 
 ### THIS NEEDS TO BE FIXED
 sudo chown root:root -R /srv/salt
+sudo chmod 755 /srv/salt/reclass
 
 #### FIXME
 service salt-minion start
