@@ -11,10 +11,11 @@ if [ ! -z $SALT_EXT_PILLAR ]; then
     cp -avr /tmp/${SALT_EXT_PILLAR}.conf /etc/salt/master.d/
 fi;
 
-OPNFV_GIT_DIR="/root/opnfv"
+###OPNFV_GIT_DIR="/root/opnfv"
 OPNFV_FUEL_DIR="/root/fuel" # Should be in sync with patch.sh, scripts patches
 
 # wtf: FIXME: only yml files
+rm -rf "/srv/salt/reclass/nodes" "/srv/salt/reclass/classes/cluster" "/srv/salt/reclass/classes/system"
 cp -avr "${OPNFV_FUEL_DIR}/mcp/reclass/nodes" "/srv/salt/reclass/nodes"
 cp -avr "${OPNFV_FUEL_DIR}/mcp/reclass/classes/cluster" "/srv/salt/reclass/classes/cluster"
 cp -avr "${OPNFV_FUEL_DIR}/mcp/reclass/classes/system" "/srv/salt/reclass/classes/system"
@@ -64,7 +65,7 @@ cp -avr "/root/pod_config.yml" "/srv/salt/reclass/classes/cluster/all-mcp-arch-c
 
 #?  ln -sf ${OPNFV_FUEL_DIR}/mcp/reclass /srv/salt
 
-  ln -sf ${OPNFV_FUEL_DIR}/mcp/metadata/service/* /srv/salt/reclass/classes/service/
+  cp -avr ${OPNFV_FUEL_DIR}/mcp/metadata/service/* /srv/salt/reclass/classes/service/
 #?  cp -r ${OPNFV_FUEL_DIR}/mcp/metadata/service /usr/share/salt-formulas/reclass
 #  cd /srv/salt/reclass/classes/service && \
 #    ln -sf /usr/share/salt-formulas/reclass/service/opendaylight
@@ -85,8 +86,10 @@ cp -avr "/root/pod_config.yml" "/srv/salt/reclass/classes/cluster/all-mcp-arch-c
 #???        ./salt-master-init.sh
 #???  salt-key -Ay
 
-  ln -sf ${OPNFV_FUEL_DIR}/mcp/salt-formulas/* /srv/salt/env/prd/
-#?  cp -r ${OPNFV_FUEL_DIR}/mcp/salt-formulas/* /usr/share/salt-formulas/env
+  cp -avr ${OPNFV_FUEL_DIR}/mcp/salt-formulas/maas/* /srv/salt/env/prd/maas/
+  cp -avr ${OPNFV_FUEL_DIR}/mcp/salt-formulas/opendaylight /srv/salt/env/prd/
+  cp -avr ${OPNFV_FUEL_DIR}/mcp/salt-formulas/tacker /srv/salt/env/prd/
+
   cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list formulas
   cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list reclass
 
