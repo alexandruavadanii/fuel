@@ -19,13 +19,13 @@ services:
     volumes:
        - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:ro
        - {{ conf.MCP_REPO_ROOT_PATH }}:/root/fuel
-       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/scripts/mcp.rsa:/root/fuel/mcp.rsa
+#       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/reclass/nodes:/srv/salt/reclass/nodes
+#       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/scripts/mcp.rsa:/root/fuel/mcp.rsa
        - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/scripts/entrypoint.sh:/entrypoint.sh
        - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/scripts/hack.conf:/etc/salt/master.d/hack.conf
-       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/reclass/classes/cluster:/srv/salt/reclass/classes/cluster
-       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/reclass/classes/system:/srv/salt/reclass/classes/system
-       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/reclass/nodes:/srv/salt/reclass/nodes
-       - {{ conf.MCP_STORAGE_DIR }}/pod_config.yml:/root/fuel/mcp/reclass/classes/cluster/all-mcp-arch-common/opnfv/pod_config.yml
+#       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/reclass/classes/cluster:/srv/salt/reclass/classes/cluster
+#       - {{ conf.MCP_REPO_ROOT_PATH }}/mcp/reclass/classes/system:/srv/salt/reclass/classes/system
+       - {{ conf.MCP_STORAGE_DIR }}/pod_config.yml:/root/pod_config.yml
        - {{ conf.MCP_STORAGE_DIR }}/base_image_opnfv_fuel_vcp.img:/srv/salt/env/prd/salt/files/control/images/base_image_opnfv_fuel_vcp.img
     hostname: cfg01
     domainname: {{ conf.cluster.domain }}

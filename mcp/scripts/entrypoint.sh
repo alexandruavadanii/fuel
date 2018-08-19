@@ -11,13 +11,21 @@ if [ ! -z $SALT_EXT_PILLAR ]; then
     cp -avr /tmp/${SALT_EXT_PILLAR}.conf /etc/salt/master.d/
 fi;
 
+OPNFV_GIT_DIR="/root/opnfv"
+OPNFV_FUEL_DIR="/root/fuel" # Should be in sync with patch.sh, scripts patches
+
+# wtf: FIXME: only yml files
+cp -avr "${OPNFV_FUEL_DIR}/mcp/reclass/nodes" "/srv/salt/reclass/nodes"
+ln -sf "${OPNFV_FUEL_DIR}/mcp/reclass/classes/cluster" "/srv/salt/reclass/classes/cluster"
+ln -sf "${OPNFV_FUEL_DIR}/mcp/reclass/classes/system" "/srv/salt/reclass/classes/system"
+ln -sf "${OPNFV_FUEL_DIR}/mcp/scripts/mcp.rsa" "/root/fuel/mcp.rsa"
+ln -sf "/root/pod_config.yml" "/srv/salt/reclass/classes/cluster/all-mcp-arch-common/opnfv/pod_config.yml"
+
 #?CI_DEBUG=${CI_DEBUG:-0}; [[ "${CI_DEBUG}" =~ (false|0) ]] || set -x
 #F_GIT_ROOT=$(git rev-parse --show-toplevel)
 #F_GIT_DIR=$(cd "${F_GIT_ROOT}/mcp" && git rev-parse --git-dir)
 #F_GIT_SUBD=${F_GIT_ROOT#${F_GIT_DIR%%/.git*}}
 ####OPNFV_TMP_DIR="/home/${SALT_MASTER_USER}/opnfv"
-OPNFV_GIT_DIR="/root/opnfv"
-OPNFV_FUEL_DIR="/root/fuel" # Should be in sync with patch.sh, scripts patches
 #OPNFV_RDIR="reclass/classes/cluster/all-mcp-arch-common"
 ####OPNFV_VCP_IMG="mcp/scripts/base_image_opnfv_fuel_vcp.img"
 ####OPNFV_VCP_DIR="/srv/salt/env/prd/salt/files/control/images"
