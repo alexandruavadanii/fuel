@@ -33,8 +33,12 @@ parameters:
       file_recv: true
   linux:
     system:
-      pkgs:
-        - lsmod
+      user:
+        salt:
+          home: /home/salt
+      package:
+        kmod:
+          version: latest
   reclass:
     storage:
       data_source:
