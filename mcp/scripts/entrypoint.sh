@@ -133,8 +133,7 @@ sed -i -e "s|return 'start/running' in |return 'is running' in |" \
     /usr/lib/python2.7/dist-packages/salt/modules/upstart.py
 
 ### THIS NEEDS TO BE FIXED
-sudo chown root:root -R /srv/salt
-sudo chmod 755 /srv/salt/reclass
+sudo chown salt:salt -R /srv/salt
 
 #### FIXME
 service salt-minion start

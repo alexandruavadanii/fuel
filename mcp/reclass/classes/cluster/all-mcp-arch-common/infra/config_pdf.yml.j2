@@ -33,11 +33,8 @@ parameters:
       file_recv: true
   linux:
     system:
-      kernel:
-        ~modules:
-        ~sysctl:
-          fs.file-max: 124165
-          kernel.panic: 60
+      pkgs:
+        - lsmod
   reclass:
     storage:
       data_source:
