@@ -26,7 +26,7 @@ OPNFV_FUEL_DIR="/root/fuel" # Should be in sync with patch.sh, scripts patches
 ####LOCAL_GIT_DIR="${F_GIT_ROOT%${F_GIT_SUBD}}"
 #############LOCAL_PDF_RECLASS=$1; shift
 # shellcheck disable=SC2116,SC2086
-LOCAL_VIRT_NODES=$(echo ${*//cfg01/}) # unquoted to filter space
+LOCAL_VIRT_NODES=$(echo ${virtual_nodes[*]}) # unquoted to filter space
 NODE_MASK="${LOCAL_VIRT_NODES// /|}"
 
 # push to cfg01 current git repo first (including submodules), at ~ubuntu/opnfv
