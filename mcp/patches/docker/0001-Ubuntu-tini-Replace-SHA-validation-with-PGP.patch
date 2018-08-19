@@ -1,0 +1,49 @@
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+: Copyright (c) 2018 Mirantis Inc., Enea AB and others.
+:
+: All rights reserved. This program and the accompanying materials
+: are made available under the terms of the Apache License, Version 2.0
+: which accompanies this distribution, and is available at
+: http://www.apache.org/licenses/LICENSE-2.0
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+From: Alexandru Avadanii <Alexandru.Avadanii@enea.com>
+Date: Sun, 19 Aug 2018 17:27:13 +0200
+Subject: [PATCH] Ubuntu: tini: Replace SHA validation with PGP
+
+Instead of using a hardcoded SHA sum to validate the /bin/tini binary
+release, switch to PGP to allow validating more binaries (e.g. for
+other architectures, like tini-static-arm64).
+
+While at it, use $(dpkg --print-architecture) to determine the full
+binary release path, so other architectures already supported by tini
+can automatically pick it up.
+
+Closes: https://github.com/epcim/docker-salt-formulas/issues/27
+
+Signed-off-by: Alexandru Avadanii <Alexandru.Avadanii@enea.com>
+---
+ DockerMake.yml | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/DockerMake.yml b/DockerMake.yml
+index 7006c70..2c75586 100644
+--- a/DockerMake.yml
++++ b/DockerMake.yml
+@@ -171,9 +171,14 @@ saltclass:
+ tini:
+   build: |
+     ENV TINI_VERSION 0.16.1
+-    ENV TINI_SHA 5e01734c8b2e6429a1ebcc67e2d86d3bb0c4574dd7819a0aff2dca784580e040
+-    RUN curl -s -S -L "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static-amd64" -o /bin/tini && chmod +x /bin/tini \
+-      && echo "$TINI_SHA  /bin/tini" | sha256sum -c -
++    ENV TINI_PGP 0527A9B7
++    ENV TINI_URL https://github.com/krallin/tini/releases/download
++    RUN gpg --keyserver keyserver.ubuntu.com --recv-key ${TINI_PGP} \
++      && curl -s -S -L "${TINI_URL}/v${TINI_VERSION}/tini-static-$(dpkg --print-architecture).asc" -o /bin/tini.asc \
++      && curl -s -S -L "${TINI_URL}/v${TINI_VERSION}/tini-static-$(dpkg --print-architecture)" -o /bin/tini \
++      && gpg --verify /bin/tini.asc \
++      && rm /bin/tini.asc \
++      && chmod +x /bin/tini
+     #COPY files/entrypoint.sh /entrypoint.sh
+     #ENTRYPOINT ["/bin/tini", "--", "/entrypoint.sh"]
+
