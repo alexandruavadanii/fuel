@@ -90,6 +90,11 @@ cp -avr "/root/pod_config.yml" "/srv/salt/reclass/classes/cluster/all-mcp-arch-c
   ln -sf ${OPNFV_FUEL_DIR}/mcp/salt-formulas/salt-formula-opendaylight/* /srv/salt/env/prd/
   ln -sf ${OPNFV_FUEL_DIR}/mcp/salt-formulas/salt-formula-tacker/* /srv/salt/env/prd/
 
+  ln -sf /srv/salt/formula/salt-formulas/salt-formula-opendaylight/metadata/service \
+         /srv/salt/reclass/classes/service/opendaylight
+  ln -sf /srv/salt/formula/salt-formulas/salt-formula-tacker/metadata/service \
+         /srv/salt/reclass/classes/service/tacker
+
   cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list formulas
   cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list reclass
 
