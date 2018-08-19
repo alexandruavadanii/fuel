@@ -48,6 +48,9 @@ trap do_exit SIGINT SIGTERM EXIT
 # Set no restrictive umask so that Jenkins can remove any residuals
 umask 0000
 
+# Clone git submodules and apply our patches
+make -C "${MCP_REPO_ROOT_PATH}/mcp/patches" deepclean patches-import
+
 pushd "${DOCKER_DIR}" > /dev/null
 
 # FIXME: install docker, pip, pipenv etc, pyinvoke, dockermake
