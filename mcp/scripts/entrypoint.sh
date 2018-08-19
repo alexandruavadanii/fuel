@@ -86,9 +86,9 @@ cp -avr "/root/pod_config.yml" "/srv/salt/reclass/classes/cluster/all-mcp-arch-c
 #???        ./salt-master-init.sh
 #???  salt-key -Ay
 
-  cp -avr ${OPNFV_FUEL_DIR}/mcp/salt-formulas/maas/* /srv/salt/env/prd/maas/
-  cp -avr ${OPNFV_FUEL_DIR}/mcp/salt-formulas/opendaylight /srv/salt/env/prd/
-  cp -avr ${OPNFV_FUEL_DIR}/mcp/salt-formulas/tacker /srv/salt/env/prd/
+  cp -avr ${OPNFV_FUEL_DIR}/mcp/salt-formulas/* /srv/salt/formula/salt-formulas/
+  ln -sf ${OPNFV_FUEL_DIR}/mcp/salt-formulas/salt-formula-opendaylight/* /srv/salt/env/prd/
+  ln -sf ${OPNFV_FUEL_DIR}/mcp/salt-formulas/salt-formula-tacker/* /srv/salt/env/prd/
 
   cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list formulas
   cd ${OPNFV_FUEL_DIR}/mcp/patches && ./patch.sh patches.list reclass
