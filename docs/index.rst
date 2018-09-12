@@ -13,4 +13,5 @@ FUEL
    release/release-notes/index
    release/installation/index
    release/userguide/index
+   release/developer-guide/index
    release/scenarios/index
