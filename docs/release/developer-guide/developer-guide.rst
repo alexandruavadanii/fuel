@@ -44,6 +44,37 @@ How to alter state files
 
 How to write a new pdf/idf
 
+=============================
+One-liners and Useful Scripts
+=============================
+
+#. Regenerate patches (simple)
+
+    .. code-block:: bash
+
+        $ make -C mcp/patches/ \
+          deepclean patches-import patches-export patches-copyright
+
+#. Bump all git submodules (to origin branch HEAD) and regenerate patches
+
+    .. code-block:: bash
+
+        $ FUEL_TRACK_REMOTES=yes make -C mcp/patches/ \
+          deepclean patches-import patches-export patches-copyright
+        # To stage one or more submodules after above pull & rebase:
+        $ make -C mcp/patches/ clean && git add <submodule path>
+
+#. Copy cluster model with a new name
+
+    .. code-block:: bash
+
+        $ ORIG_CLUSTER=mcp-ovs-ha && \
+          NEW_CLUSTER=mcp-vpp-ha && \
+          cd mcp/reclass/classes/cluster && \
+              cp -ar $ORIG_CLUSTER $NEW_CLUSTER && \
+              grep $ORIG_CLUSTER -Rl $NEW_CLUSTER | \
+                  xargs sed -i "s/$ORIG_CLUSTER/$NEW_CLUSTER/g"
+
 
 ================
 Network Overview
