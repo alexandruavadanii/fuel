@@ -63,7 +63,9 @@ ssh key */var/lib/opnfv/mcp.rsa*. The example below is a connection to Salt mast
 
         $ ssh -o StrictHostKeyChecking=no -i  /var/lib/opnfv/mcp.rsa  -l ubuntu 10.20.0.2
 
-**Note**: The Salt master IP is not hard set, it is configurable via INSTALLER_IP during deployment
+.. NOTE::
+
+    The Salt master IP is not hard set, it is configurable via INSTALLER_IP during deployment
 
 Logging in to cluster nodes is possible from the Jumpserver and from Salt master. On the Salt master
 cluster hostnames can be used instead of IP addresses:
@@ -348,8 +350,10 @@ A simplified installation can be done with the use of a docker ubuntu container.
 approach will avoid installing packages on the host, which might collide with other packages.
 After the installation is done, a webbrowser on the host can be used to view the results.
 
-**NOTE**: The host can be any device with Docker package already installed.
-          The user which runs the docker needs to have root priviledges.
+.. NOTE::
+
+    The host can be any device with Docker package already installed.
+    The user which runs the docker needs to have root priviledges.
 
 
 **Instructions**
