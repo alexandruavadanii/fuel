@@ -6,6 +6,8 @@
 FUEL@OPNFV
 ==========
 
+|docs|
+
 -----------
 Description
 -----------
@@ -35,6 +37,11 @@ Contributing
 -------
 Support
 -------
+
+.. |docs| image:: https://readthedocs.org/projects/opnfv-fuel/badge/?version=latest
+    :alt: Documentation Status
+    :scale: 100%
+    :target: https://opnfv-fuel.readthedocs.io/en/latest/?badge=latest
 
 -------
 License
