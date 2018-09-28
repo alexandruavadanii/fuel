@@ -1,0 +1,123 @@
+diff -Naur mcp-ovs-noha/infra/init.yml mcp-alav-noha/infra/init.yml
+--- mcp-ovs-noha/infra/init.yml	2018-09-20 15:14:26.629830838 +0200
++++ mcp-alav-noha/infra/init.yml	2018-09-20 15:14:26.629830838 +0200
+@@ -11,4 +11,4 @@
+ 
+ parameters:
+   _param:
+-    cluster_name: mcp-ovs-noha
++    cluster_name: mcp-ovs-dpdk-noha
+diff -Naur mcp-ovs-noha/openstack/compute.yml.j2 mcp-alav-noha/openstack/compute.yml.j2
+--- mcp-ovs-noha/openstack/compute.yml.j2	2018-09-27 16:04:06.462185119 +0200
++++ mcp-alav-noha/openstack/compute.yml.j2	2018-09-28 19:48:40.299936616 +0200
+@@ -6,15 +6,18 @@
+ # http://www.apache.org/licenses/LICENSE-2.0
+ ##############################################################################
+ {%- import 'net_map.j2' as nm with context %}
+-{%- import 'net_macros.j2' as ma with context %}
+-{%- set vlan_private_start = (nm.vlan_private | string).rsplit('-')[0] %}
+ ---
+ classes:
+-  - service.neutron.compute.single
+   - system.nova.compute.nfv.hugepages
++  - system.neutron.compute.nfv.dpdk
++  - service.neutron.compute.single
+   - cluster.mcp-common-noha.openstack_compute
+   - cluster.mcp-ovs-noha
+ parameters:
++  neutron:
++    compute:
++      backend:
++        tenant_network_types: ${_param:neutron_tenant_network_types}
+   linux:
+     network:
+       interface:
+@@ -23,15 +26,17 @@
+           gateway: {{ nm.net_admin_gw }}
+           name_servers:
+             - {{ nm.net_admin_gw }}
+-        br-mesh:
++        dpdk0:
++          name: ${_param:dpdk0_name}
++          pci: ${_param:dpdk0_pci}
++          driver: ${_param:dpdk0_driver}
++          enabled: true
++          bridge: br-prv
++          type: dpdk_ovs_port
++          n_rxq: ${_param:dpdk0_n_rxq}
++          mtu: ${_param:interface_mtu}
++        br-prv:
+           enabled: true
+-          type: bridge
+-          proto: static
+-          address: ${_param:tenant_address}
+-          netmask: ${_param:opnfv_net_private_mask}
+-          use_interfaces:
+-            - {{ ma.interface_str(nm.cmp001.nic_private, vlan_private_start) }}
+-    system:
+-      package:
+-        cgroup-tools:
+-          version: latest
++          type: dpdk_ovs_bridge
++        {{ nm.cmp001.nic_private }}:
++          type: dpdk  # Not a meaningful type, just match 'dpdk' for filtering
+diff -Naur mcp-ovs-noha/openstack/control.yml mcp-alav-noha/openstack/control.yml
+--- mcp-ovs-noha/openstack/control.yml	2018-09-27 16:04:06.462185119 +0200
++++ mcp-alav-noha/openstack/control.yml	2018-09-28 19:48:40.299936616 +0200
+@@ -11,8 +11,7 @@
+   - cluster.mcp-common-noha.openstack_control
+   - cluster.mcp-ovs-noha
+ parameters:
+-  nova:
+-    controller:
+-      scheduler_default_filters: "DifferentHostFilter,SameHostFilter,RetryFilter,AvailabilityZoneFilter,RamFilter,\
+-                                 CoreFilter,DiskFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,\
+-                                 ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter,NUMATopologyFilter"
++  neutron:
++    server:
++      backend:
++        tenant_vlan_range: ${_param:opnfv_net_tenant_vlan}
+diff -Naur mcp-ovs-noha/openstack/gateway.yml.j2 mcp-alav-noha/openstack/gateway.yml.j2
+--- mcp-ovs-noha/openstack/gateway.yml.j2	2018-09-20 15:14:26.629830838 +0200
++++ mcp-alav-noha/openstack/gateway.yml.j2	2018-09-28 19:48:40.299936616 +0200
+@@ -6,23 +6,22 @@
+ # http://www.apache.org/licenses/LICENSE-2.0
+ ##############################################################################
+ {%- import 'net_map.j2' as nm with context %}
+-{%- import 'net_macros.j2' as ma with context %}
+-{%- set vlan_private_start = (nm.vlan_private | string).rsplit('-')[0] %}
+ ---
+ classes:
+   - cluster.mcp-common-noha.openstack_gateway
+   - service.neutron.gateway.single
+   - cluster.mcp-ovs-noha
+ parameters:
++  neutron:
++    gateway:
++      backend:
++        tenant_network_types: ${_param:neutron_tenant_network_types}
+   linux:
+     network:
+       interface:
+-        br-mesh:
++        {{ nm.cmp001.nic_private }}:
++          ovs_bridge: br-prv
++        br-prv:
+           enabled: true
+-          type: bridge
++          type: ovs_bridge
+           mtu: ${_param:interface_mtu}
+-          proto: static
+-          address: ${_param:tenant_address}
+-          netmask: ${_param:opnfv_net_private_mask}
+-          use_interfaces:
+-            - {{ ma.interface_str(nm.ctl01.nic_private, vlan_private_start) }}
+diff -Naur mcp-ovs-noha/openstack/init.yml mcp-alav-noha/openstack/init.yml
+--- mcp-ovs-noha/openstack/init.yml	2018-09-20 15:14:26.629830838 +0200
++++ mcp-alav-noha/openstack/init.yml	2018-09-20 15:14:26.629830838 +0200
+@@ -10,4 +10,4 @@
+   - cluster.mcp-common-noha.openstack_init
+ parameters:
+   _param:
+-    neutron_tenant_network_types: "flat,vxlan"
++    neutron_tenant_network_types: "flat,vlan"

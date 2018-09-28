@@ -1,0 +1,110 @@
+diff -Naur mcp-ovs-ha/infra/init.yml mcp-alav-ha/infra/init.yml
+--- mcp-ovs-ha/infra/init.yml	2018-09-20 15:14:26.629830838 +0200
++++ mcp-alav-ha/infra/init.yml	2018-09-28 19:46:26.769899311 +0200
+@@ -11,4 +11,9 @@
+   - cluster.mcp-ovs-ha.openstack
+ parameters:
+   _param:
+-    cluster_name: mcp-ovs-ha
++    cluster_name: mcp-ovs-dpdk-ha
++  linux:
++    system:
++      service:
++        apt-daily.timer:
++          status: dead
+diff -Naur mcp-ovs-ha/openstack/compute.yml mcp-alav-ha/openstack/compute.yml
+--- mcp-ovs-ha/openstack/compute.yml	2018-09-20 15:14:26.629830838 +0200
++++ mcp-alav-ha/openstack/compute.yml	2018-09-28 19:46:26.769899311 +0200
+@@ -8,10 +8,21 @@
+ ---
+ classes:
+   - cluster.mcp-common-ha.openstack_compute
+-  - cluster.mcp-ovs-ha.openstack.compute_pdf
+   - cluster.mcp-ovs-ha.infra
++  - cluster.mcp-ovs-ha.openstack.compute_pdf
++  - system.neutron.compute.nfv.dpdk
+ parameters:
++  neutron:
++    gateway:
++      dpdk: 'True'
++      vhost_socket_dir: ${_param:compute_ovs_vhost_socket_dir}
++      backend:
++        tenant_vlan_range: ${_param:neutron_tenant_vlan_range}
+   nova:
+     compute:
+       libvirt_service: libvirtd
+       libvirt_bin: /etc/default/libvirtd
++  linux:
++    system:
++      kernel:
++        isolcpu: ${_param:compute_kernel_isolcpu}
+diff -Naur mcp-ovs-ha/openstack/compute_pdf.yml.j2 mcp-alav-ha/openstack/compute_pdf.yml.j2
+--- mcp-ovs-ha/openstack/compute_pdf.yml.j2	2018-09-20 15:14:26.629830838 +0200
++++ mcp-alav-ha/openstack/compute_pdf.yml.j2	2018-09-20 15:14:26.629830838 +0200
+@@ -6,31 +6,22 @@
+ # http://www.apache.org/licenses/LICENSE-2.0
+ ##############################################################################
+ {%- import 'net_map.j2' as nm with context %}
+-{%- import 'net_macros.j2' as ma with context %}
+-{#- Filter-out NIC duplicates by constructing a dict (used NICs only) #}
+-{%- set nics = { nm.cmp001.nic_private: True } %}
+-{%- set vlan_private_start = (nm.vlan_private | string).rsplit('-')[0] %}
+-{%- set vlans = { vlan_private_start: nm.cmp001.nic_private } %}
+ ---
+ parameters:
+   linux:
+     network:
++      ovs_nowait: true
+       interface:
+-
+-{#- prevent duplicates for tagged mgmt on the same physical interface as PXE/admin #}
+-{%- if nm.cmp001.nic_admin in nics %}
+-  {%- do nics.pop(nm.cmp001.nic_admin) %}
+-{%- endif %}
+-
+-{{ ma.linux_network_interfaces_nic(nics) }}
+-
+-{{ ma.linux_network_interfaces_vlan(vlans) }}
+-
+-        br-mesh:
++        dpdk0:
++          name: ${_param:dpdk0_name}
++          pci: ${_param:dpdk0_pci}
++          driver: ${_param:dpdk0_driver}
+           enabled: true
+-          type: bridge
+-          address: ${_param:tenant_address}
+-          netmask: ${_param:opnfv_net_private_mask}
+-          mtu: 1500
+-          use_interfaces:
+-            - {{ ma.interface_str(nm.cmp001.nic_private, vlan_private_start) }}
++          bridge: br-prv
++          type: dpdk_ovs_port
++          n_rxq: ${_param:dpdk0_n_rxq}
++        br-prv:
++          enabled: true
++          type: dpdk_ovs_bridge
++        br-floating:
++          datapath_type: netdev
+diff -Naur mcp-ovs-ha/openstack/control.yml mcp-alav-ha/openstack/control.yml
+--- mcp-ovs-ha/openstack/control.yml	2018-09-20 15:14:26.629830838 +0200
++++ mcp-alav-ha/openstack/control.yml	2018-09-28 19:46:26.769899311 +0200
+@@ -11,3 +11,8 @@
+   - cluster.mcp-common-ha.openstack_interface_vcp_biport
+   - cluster.mcp-common-ha.openstack_control
+   - cluster.mcp-ovs-ha.infra
++parameters:
++  neutron:
++    server:
++      backend:
++        tenant_vlan_range: ${_param:neutron_tenant_vlan_range}
+diff -Naur mcp-ovs-ha/openstack/init.yml mcp-alav-ha/openstack/init.yml
+--- mcp-ovs-ha/openstack/init.yml	2018-09-20 15:14:26.629830838 +0200
++++ mcp-alav-ha/openstack/init.yml	2018-09-20 15:14:26.629830838 +0200
+@@ -10,4 +10,5 @@
+   - cluster.mcp-common-ha.openstack_init
+ parameters:
+   _param:
+-    neutron_tenant_network_types: "flat,vxlan"
++    neutron_tenant_network_types: "flat,vlan"
++    neutron_tenant_vlan_range: ${_param:opnfv_net_tenant_vlan}
