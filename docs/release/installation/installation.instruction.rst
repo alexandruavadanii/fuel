@@ -199,7 +199,7 @@ and have passwordless sudo access.
 
 The following example adds the groups to the user ``jenkins``
 
-.. code-block:: bash
+.. code-block:: console
 
     $ sudo usermod -aG sudo jenkins
     $ sudo usermod -aG libvirt jenkins
