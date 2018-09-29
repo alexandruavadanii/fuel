@@ -6,38 +6,37 @@
 Abstract
 ========
 
-This document compiles the release notes for the Fraser release of
-OPNFV when using Fuel as a deployment tool. This is an unified documentation
-for both x86_64 and aarch64 architectures. All information is common for
-both architectures except when explicitly stated.
+This document compiles the release notes for the ``Gambia`` release of
+OPNFV when using Fuel as a deployment tool.
 
+Starting with this release, both ``x86_64`` and ``aarch64`` architectures
+are supported at the same time by the ``fuel`` codebase.
 
 ===============
 Important Notes
 ===============
 
 These notes provides release information for the use of Fuel as deployment
-tool for the Fraser release of OPNFV.
+tool for the Gambia release of OPNFV.
 
-The goal of the Fraser release and this Fuel-based deployment process is
+The goal of the Gambia release and this Fuel-based deployment process is
 to establish a lab ready platform accelerating further development
 of the OPNFV infrastructure.
 
-Carefully follow the installation-instructions.
+Carefully follow the installation instructions.
 
 =======
 Summary
 =======
 
-For Fraser, the typical use of Fuel as an OpenStack installer is
+For Gambia, the typical use of Fuel as an OpenStack installer is
 supplemented with OPNFV unique components such as:
 
-- `OpenDaylight <https://www.opendaylight.org/software>`_
-- `Open vSwitch for NFV <https://wiki.opnfv.org/ovsnfv>`_
+- `OpenDaylight`_
 
 As well as OPNFV-unique configurations of the Hardware and Software stack.
 
-This Fraser artifact provides Fuel as the deployment stage tool in the
+This Gambia artifact provides Fuel as the deployment stage tool in the
 OPNFV CI pipeline including:
 
 - Documentation built by Jenkins
@@ -48,34 +47,33 @@ OPNFV CI pipeline including:
 
   - installation instructions
 
-- Automated deployment of Fraser with running on baremetal or a nested
+- Automated deployment of Gambia with running on baremetal or a nested
   hypervisor environment (KVM)
 
-- Automated validation of the Fraser deployment
+- Automated validation of the Gambia deployment
 
 ============
 Release Data
 ============
 
 +--------------------------------------+--------------------------------------+
-| **Project**                          | fuel/armband                         |
+| **Project**                          | fuel                                 |
 |                                      |                                      |
 +--------------------------------------+--------------------------------------+
-| **Repo/tag**                         | opnfv-6.2.1                          |
+| **Repo/tag**                         | opnfv-7.0.0                          |
 |                                      |                                      |
 +--------------------------------------+--------------------------------------+
-| **Release designation**              | Fraser 6.2                           |
+| **Release designation**              | Gambia 7.0                           |
 |                                      |                                      |
 +--------------------------------------+--------------------------------------+
-| **Release date**                     | June 29 2018                         |
+| **Release date**                     | TBD     2018                         |
 |                                      |                                      |
 +--------------------------------------+--------------------------------------+
-| **Purpose of the delivery**          | Fraser alignment to Released         |
+| **Purpose of the delivery**          | Gambia alignment to Released         |
 |                                      | MCP baseline + features and          |
 |                                      | bug-fixes for the following          |
 |                                      | feaures:                             |
 |                                      |                                      |
-|                                      | - Open vSwitch for NFV               |
 |                                      | - OpenDaylight                       |
 |                                      | - DPDK                               |
 +--------------------------------------+--------------------------------------+
@@ -85,7 +83,7 @@ Version Change
 
 Module Version Changes
 ----------------------
-This is the Fraser 6.2 release.
+This is the Gambia 7.0 release.
 It is based on following upstream versions:
 
 - MCP Base Release
@@ -96,7 +94,7 @@ It is based on following upstream versions:
 
 Document Changes
 ----------------
-This is the Fraser 6.2 release.
+This is the Gambia 7.0 release.
 It comes with the following documentation:
 
 - :ref:`fuel-installation`
@@ -119,7 +117,7 @@ Bug Corrections
 
 **JIRA TICKETS:**
 
-`Fraser 6.2 bug fixes  <https://jira.opnfv.org/issues/?filter=12318>`_
+`Gambia 7.0 bug fixes  <https://jira.opnfv.org/issues/?filter=12318>`_
 
 (Also See respective Integrated feature project's bug tracking)
 
@@ -129,9 +127,7 @@ Deliverables
 Software Deliverables
 ---------------------
 
-- `Fuel@x86_64 installer script files <https://git.opnfv.org/fuel>`_
-
-- `Fuel@aarch64 installer script files <https://git.opnfv.org/armband>`_
+- `Fuel multiarch (x86_64, aarch64) installer script files <https://git.opnfv.org/fuel>`_
 
 Documentation Deliverables
 --------------------------
@@ -179,13 +175,13 @@ None
 ============
 Test Results
 ============
-The Fraser 6.2 release with the Fuel deployment tool has undergone QA test
+The Gambia 7.0 release with the Fuel deployment tool has undergone QA test
 runs, see separate test results.
 
 ==========
 References
 ==========
-For more information on the OPNFV Fraser 6.2 release, please see:
+For more information on the OPNFV Gambia 7.0 release, please see:
 
 OPNFV
 =====
@@ -210,3 +206,5 @@ Fuel
 ====
 
 7) `Mirantis Cloud Platform Documentation <https://docs.mirantis.com/mcp/latest>`_
+
+.. _`OpenDaylight`: https://www.opendaylight.org/software
