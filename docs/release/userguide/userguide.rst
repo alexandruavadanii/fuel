@@ -404,7 +404,7 @@ After the installation is done, a webbrowser on the host can be used to view the
 References
 ==========
 
-1) :ref:`fuel-release-installation-label`
+1) :ref:`fuel-installation`
 2) `Saltstack Documentation <https://docs.saltstack.com/en/latest/topics/>`_
 3) `Saltstack Formulas <https://salt-formulas.readthedocs.io/en/latest/>`_
 4) `Virtio performance <https://mpolednik.github.io/2017/01/23/virtio-blk-vs-virtio-scsi/>`_

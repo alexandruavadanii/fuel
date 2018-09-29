@@ -603,7 +603,7 @@ to the installer will be validated against the schemas.
 Release Notes
 =============
 
-Please refer to the :ref:`Release Notes <fuel-release-notes-label>` article.
+Please refer to the :ref:`Release Notes <fuel-releasenotes>` article.
 
 ==========
 References

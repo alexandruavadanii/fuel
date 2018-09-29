@@ -99,11 +99,11 @@ Document Changes
 This is the Fraser 6.2 release.
 It comes with the following documentation:
 
-- :ref:`fuel-release-installation-label`
+- :ref:`fuel-installation`
 
 - Release notes (This document)
 
-- :ref:`fuel-release-userguide-label`
+- :ref:`fuel-userguide`
 
 Reason for Version
 ==================
@@ -136,11 +136,11 @@ Software Deliverables
 Documentation Deliverables
 --------------------------
 
-- :ref:`fuel-release-installation-label`
+- :ref:`fuel-installation`
 
 - Release notes (This document)
 
-- :ref:`fuel-release-userguide-label`
+- :ref:`fuel-userguide`
 
 =========================================
 Known Limitations, Issues and Workarounds
