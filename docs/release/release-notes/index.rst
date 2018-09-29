@@ -4,12 +4,14 @@
 
 .. _fuel-releasenotes:
 
-*****************************
-Release notes for Fuel\@OPNFV
-*****************************
+************************
+OPNFV Fuel Release Notes
+************************
+
+Contents:
 
 .. toctree::
    :numbered:
-   :maxdepth: 2
+   :maxdepth: 4
 
    release-notes.rst
