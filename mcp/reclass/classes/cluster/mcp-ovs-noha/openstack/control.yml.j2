@@ -11,8 +11,15 @@ classes:
   - cluster.mcp-common-noha.openstack_control
   - cluster.mcp-ovs-noha
 parameters:
+{%- if '-ovs-' in conf.MCP_DEPLOY_SCENARIO %}
+  neutron:
+    server:
+      backend:
+        tenant_vlan_range: ${_param:opnfv_net_tenant_vlan}
+{%- else %}
   nova:
     controller:
       scheduler_default_filters: "DifferentHostFilter,SameHostFilter,RetryFilter,AvailabilityZoneFilter,RamFilter,\
                                  CoreFilter,DiskFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,\
                                  ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter,NUMATopologyFilter"
+{%- endif %}

@@ -17,6 +17,14 @@ parameters:
   linux:
     network:
       interface:
+{%- if '-ovs-' in conf.MCP_DEPLOY_SCENARIO %}
+        {{ nm.cmp001.nic_private }}:
+          ovs_bridge: br-prv
+        br-prv:
+          enabled: true
+          type: ovs_bridge
+          mtu: ${_param:interface_mtu}
+{%- else %}
         br-mesh:
           enabled: true
           type: bridge
@@ -26,3 +34,10 @@ parameters:
           netmask: ${_param:opnfv_net_private_mask}
           use_interfaces:
             - {{ ma.interface_str(nm.ctl01.nic_private, vlan_private_start) }}
+{%- endif %}
+{%- if '-ovs-' in conf.MCP_DEPLOY_SCENARIO %}
+  neutron:
+    gateway:
+      backend:
+        tenant_network_types: ${_param:neutron_tenant_network_types}
+{%- endif %}

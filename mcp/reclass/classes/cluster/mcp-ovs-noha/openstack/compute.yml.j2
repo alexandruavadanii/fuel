@@ -11,10 +11,19 @@
 ---
 classes:
   - service.neutron.compute.single
+{%- if '-ovs-' in conf.MCP_DEPLOY_SCENARIO %}
+  - system.neutron.compute.nfv.dpdk
+{%- endif %}
   - system.nova.compute.nfv.hugepages
   - cluster.mcp-common-noha.openstack_compute
   - cluster.mcp-ovs-noha
 parameters:
+{%- if '-ovs-' in conf.MCP_DEPLOY_SCENARIO %}
+  neutron:
+    compute:
+      backend:
+        tenant_network_types: ${_param:neutron_tenant_network_types}
+{%- endif %}
   linux:
     network:
       interface:
@@ -23,6 +32,22 @@ parameters:
           gateway: {{ nm.net_admin_gw }}
           name_servers:
             - {{ nm.net_admin_gw }}
+{%- if '-ovs-' in conf.MCP_DEPLOY_SCENARIO %}
+        dpdk0:
+          name: ${_param:dpdk0_name}
+          pci: ${_param:dpdk0_pci}
+          driver: ${_param:dpdk0_driver}
+          enabled: true
+          bridge: br-prv
+          type: dpdk_ovs_port
+          n_rxq: ${_param:dpdk0_n_rxq}
+          mtu: ${_param:interface_mtu}
+        br-prv:
+          enabled: true
+          type: dpdk_ovs_bridge
+        {{ nm.cmp001.nic_private }}:
+          type: dpdk  # Not a meaningful type, just match 'dpdk' for filtering
+{%- else %}
         br-mesh:
           enabled: true
           type: bridge
@@ -35,3 +60,4 @@ parameters:
       package:
         cgroup-tools:
           version: latest
+{%- endif %}
