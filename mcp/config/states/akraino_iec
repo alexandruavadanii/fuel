@@ -12,7 +12,8 @@ CI_DEBUG=${CI_DEBUG:-0}; [[ "${CI_DEBUG}" =~ (false|0) ]] || set -x
 # shellcheck disable=SC1090
 source "$(dirname "${BASH_SOURCE[0]}")/../../scripts/lib.sh"
 
-IEC_REPO_URI='https://gerrit.akraino.org/r/iec'
+#IEC_REPO_URI='https://gerrit.akraino.org/r/iec'
+IEC_REPO_URI='https://github.com/alexandruavadanii/iec'
 IEC_USER='ubuntu'
 # shellcheck disable=SC2016
 IEC_REPO_PATH=$(su - "${IEC_USER}" -c 'echo ${HOME}/iec')
@@ -41,6 +42,7 @@ if [ "${KUBE_NODE_CNT}" != "$(salt-key | grep -c -e '^iec')" ]; then
 fi
 salt -C 'iec* and *01*' cmd.run runas="${IEC_USER}" 'kubectl get nodes'
 
-salt -C 'iec* and *01*' cmd.run runas="${IEC_USER}" "${IEC_REPO_PATH}/scripts/cni/calico/calico.sh"
+salt -C 'iec* and *01*' cmd.run runas="${IEC_USER}" \
+  "${IEC_REPO_PATH}/scripts/cni/calico/calico.sh ${IEC_MASTER_IP}"
 salt -C 'iec* and *01*' cmd.run runas="${IEC_USER}" "${IEC_REPO_PATH}/scripts/nginx.sh"
 salt -C 'iec* and *01*' cmd.run runas="${IEC_USER}" "${IEC_REPO_PATH}/scripts/helm.sh"
