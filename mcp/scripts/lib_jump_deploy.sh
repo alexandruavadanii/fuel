@@ -143,7 +143,7 @@ function __mount_image {
     # AArch64 CentOS cloud image has root partition at index 4 instead of 1
     sudo mount "${OPNFV_MAP_DEV/p1/p4}" "${OPNFV_MNT_DIR}"
     sudo sed -i -e 's/^\(SELINUX\)=.*$/\1=permissive/g' \
-      "${OPNFV_MNT_DIR}/etc/sysconfig/selinux"
+      "${OPNFV_MNT_DIR}/etc/selinux/config"
   else
     # grub-update does not like /dev/nbd*, so use a loop device to work around it
     sudo losetup "${OPNFV_LOOP_DEV}" "${OPNFV_MAP_DEV}"
