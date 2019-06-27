@@ -141,11 +141,12 @@ function __mount_image {
                                     "${OPNFV_MNT_DIR}/EFI/BOOT/BOOTAA64.EFI"
     sudo umount -l "${OPNFV_MNT_DIR}"
     # AArch64 CentOS cloud image has root partition at index 4 instead of 1
-    OPNFV_MAP_DEV=${OPNFV_MAP_DEV/p1/p4}
+    sudo mount "${OPNFV_MAP_DEV/p1/p4}" "${OPNFV_MNT_DIR}"
+  else
+    # grub-update does not like /dev/nbd*, so use a loop device to work around it
+    sudo losetup "${OPNFV_LOOP_DEV}" "${OPNFV_MAP_DEV}"
+    sudo mount "${OPNFV_LOOP_DEV}" "${OPNFV_MNT_DIR}"
   fi
-  # grub-update does not like /dev/nbd*, so use a loop device to work around it
-  sudo losetup "${OPNFV_LOOP_DEV}" "${OPNFV_MAP_DEV}"
-  sudo mount "${OPNFV_LOOP_DEV}" "${OPNFV_MNT_DIR}"
   sudo mount -t proc proc "${OPNFV_MNT_DIR}/proc"
   sudo mount -t sysfs sys "${OPNFV_MNT_DIR}/sys"
   sudo mount -o bind /dev "${OPNFV_MNT_DIR}/dev"
