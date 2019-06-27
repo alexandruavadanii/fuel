@@ -44,6 +44,8 @@ parameters:
           group: root
         /etc/udev/rules.d/70-persistent-net.rules:
           contents: ''
+        /etc/modprobe.d/vfat.conf:
+          contents: ''
       kernel:
         boot_options:
           - net.ifnames=1
