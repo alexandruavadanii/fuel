@@ -44,8 +44,12 @@ parameters:
           group: root
         /etc/udev/rules.d/70-persistent-net.rules:
           contents: ''
+{%- if conf.nodes[nm.ctl01.idx].node.arch == 'aarch64' %}
         /etc/modprobe.d/vfat.conf:
           contents: ''
+        /boot/efi/EFI/centos/grub.cfg:
+          source: /boot/grub2/grub.cfg
+{%- endif %}
       kernel:
         boot_options:
           - net.ifnames=1
