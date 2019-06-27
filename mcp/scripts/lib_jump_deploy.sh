@@ -129,16 +129,22 @@ function __mount_image {
     sudo e2fsck -pf "${OPNFV_MAP_DEV}"
     sudo resize2fs "${OPNFV_MAP_DEV}"
   else
-    if [ "$(uname -i)" = "aarch64" ] && [[ "${MCP_OS:-}" =~ centos ]]; then
-      # AArch64 CentOS cloud image has root partition at index 4 instead of 1
-      OPNFV_MAP_DEV=${OPNFV_MAP_DEV/p1/p4}
-    fi
     sleep 5 # /dev/nbdNp1 takes some time to come up
   fi
   sudo partx -d "${OPNFV_NBD_DEV}"
+  mkdir -p "${OPNFV_MNT_DIR}"
+  if [ "$(uname -i)" = "aarch64" ] && [[ "${MCP_OS:-}" =~ centos ]]; then
+    # AArch64 CentOS cloud image contains a broken shim binary
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1527283
+    sudo mount "${OPNFV_MAP_DEV}" "${OPNFV_MNT_DIR}"
+    sudo cp -f --remove-destination "${OPNFV_MNT_DIR}/EFI/BOOT/fbaa64.efi" \
+                                    "${OPNFV_MNT_DIR}/EFI/BOOT/BOOTAA64.EFI"
+    sudo umount -l "${OPNFV_MNT_DIR}"
+    # AArch64 CentOS cloud image has root partition at index 4 instead of 1
+    OPNFV_MAP_DEV=${OPNFV_MAP_DEV/p1/p4}
+  fi
   # grub-update does not like /dev/nbd*, so use a loop device to work around it
   sudo losetup "${OPNFV_LOOP_DEV}" "${OPNFV_MAP_DEV}"
-  mkdir -p "${OPNFV_MNT_DIR}"
   sudo mount "${OPNFV_LOOP_DEV}" "${OPNFV_MNT_DIR}"
   sudo mount -t proc proc "${OPNFV_MNT_DIR}/proc"
   sudo mount -t sysfs sys "${OPNFV_MNT_DIR}/sys"
