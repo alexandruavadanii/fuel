@@ -40,4 +40,4 @@ wait_for 3.0 "salt -C 'E@^(${NODE_MASK}).*' state.sls linux ${EXCLUDE_IDS}"
 salt -C "E@^(${NODE_MASK}).*" cmd.run 'reboot'
 wait_for 90.0 "salt -C 'E@^(${NODE_MASK}).*' test.ping"
 wait_for 3.0 "salt -C 'E@^(${NODE_MASK}).*' pkg.upgrade refresh=False dist_upgrade=True"
-wait_for 3.0 "salt -C 'E@^(${NODE_MASK}).*' state.apply salt,ntp"
+wait_for 3.0 "salt -C 'E@^(${NODE_MASK}).*' state.apply salt,ntp" || true

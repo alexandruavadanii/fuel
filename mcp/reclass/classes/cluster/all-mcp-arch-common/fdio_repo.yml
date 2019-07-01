@@ -8,21 +8,16 @@
 ---
 parameters:
   _param:
-    vpp_version: '18.07-release'
+    vpp_version: '19.04.2-rc0~12-g5d265456f~b74'
   linux:
     system:
       repo:
         fdio-ubuntu:
-          # yamllint disable-line rule:line-length
-          source: "deb [trusted=yes] http://nexus.fd.io/content/repositories/fd.io.ubuntu.${_param:linux_system_codename}.main/ ./"
+          source: "deb [trusted=yes] https://packagecloud.io/fdio/1904/ubuntu bionic main"
           pin:
-            - pin: 'version ${_param:vpp_version}'
+            - pin: 'release o=Mirantis'
               priority: 1200
-              package: 'vpp*'
-        # NOTE(armband): For now we define all repos on all archs, let APT figure it out
-        fdio-ubuntu-arm:
-          # yamllint disable-line rule:line-length
-          source: "deb [trusted=yes] http://nexus.fd.io/content/repositories/fd.io.ubuntu-arm.${_param:linux_system_codename}.main/ ./"
+              package: '*'
         networking-vpp:
           source: "deb http://ppa.launchpad.net/opnfv-fuel/networking-vpp/ubuntu ${_param:linux_system_codename} main"
           key: |

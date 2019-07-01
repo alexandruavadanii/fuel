@@ -29,6 +29,15 @@ parameters:
     internal_protocol: 'http'
     neutron_firewall_driver: 'iptables_hybrid'
     openstack_node_role: primary
+  keystone:
+    client:
+      os_client_config:
+        cfgs:
+          root:
+            content:
+              clouds:
+                admin_identity:
+                  identity_api_version: 3
   nova:
     controller:
       # yamllint disable-line rule:truthy
