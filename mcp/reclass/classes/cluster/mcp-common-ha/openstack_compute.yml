@@ -34,7 +34,7 @@ parameters:
     nova_vncproxy_url: https://${_param:cluster_public_host}:6080
     keepalived_vip_interface: br-ctl
     keepalived_vip_virtual_router_id: 69
-    linux_system_codename: xenial
+    linux_system_codename: bionic
   glusterfs:
     client:
       volumes:

@@ -66,6 +66,12 @@ salt -I 'barbican:server:role:primary' state.sls barbican
 salt -I 'barbican:server:role:secondary' state.sls barbican
 salt -I 'barbican:client' state.sls barbican
 
+# remove config files coming from packages
+for service in gnocchi panko; do
+  salt -I "${service}:server" pkg.install ${service}-api
+  salt -I "${service}:server" file.remove "/etc/apache2/sites-enabled/${service}-api.conf"
+done
+
 salt -I 'redis:cluster:role:master' state.sls redis
 salt -I 'redis:server' state.sls redis
 salt -I 'gnocchi:server:role:primary' state.sls gnocchi

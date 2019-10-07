@@ -52,7 +52,7 @@ classes:
 parameters:
   _param:
 {%- if not conf.MCP_VCP %}
-    linux_system_codename: xenial  # sync from kvm
+    linux_system_codename: bionic  # sync from kvm
     # For NOVCP, we switch keepalived VIPs, to keep cluster_vip_address in ctl
     single_nic: br-ctl  # for keepalive_vip_interface interpolation
     control_nic: ~      # Dummy value to keep reclass 1.5.2 happy
