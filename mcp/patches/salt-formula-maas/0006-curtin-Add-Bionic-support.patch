@@ -1,4 +1,4 @@
-From f29d114af8853a718897f75cc98b48cf74b17dc5 Mon Sep 17 00:00:00 2001
+From 5000d4c06640b234b10b832bb917f2c3360a0b9d Mon Sep 17 00:00:00 2001
 From: Alexandru Avadanii <Alexandru.Avadanii@enea.com>
 Date: Wed, 16 Oct 2019 15:02:39 +0200
 Subject: [PATCH] curtin: Add Bionic support
@@ -7,7 +7,8 @@ Signed-off-by: Alexandru Avadanii <Alexandru.Avadanii@enea.com>
 ---
  .../curtin_userdata_amd64_generic_bionic      | 80 +++++++++++++++++++
  .../curtin_userdata_arm64_generic_bionic      | 65 +++++++++++++++
- 2 files changed, 145 insertions(+)
+ maas/region.sls                               | 24 ++++++
+ 3 files changed, 169 insertions(+)
  create mode 100644 maas/files/curtin_userdata_amd64_generic_bionic
  create mode 100644 maas/files/curtin_userdata_arm64_generic_bionic
 
@@ -168,6 +169,41 @@ index 0000000..baf203a
 +  driver_07_update_initramfs: ["curtin", "in-target", "--", "update-initramfs", "-u"]
 +{{endif}}
 +{% endraw %}
+diff --git a/maas/region.sls b/maas/region.sls
+index 52fb952..ca876ee 100644
+--- a/maas/region.sls
++++ b/maas/region.sls
+@@ -138,6 +138,30 @@ maas_apache_headers:
+   - require:
+     - pkg: maas_region_packages
+ 
++/etc/maas/preseeds/curtin_userdata_amd64_generic_bionic:
++  file.managed:
++  - source: salt://maas/files/curtin_userdata_amd64_generic_bionic
++  - template: jinja
++  - user: root
++  - group: root
++  - mode: 644
++  - context:
++      salt_master_ip: {{ region.salt_master_ip }}
++  - require:
++    - pkg: maas_region_packages
++
++/etc/maas/preseeds/curtin_userdata_arm64_generic_bionic:
++  file.managed:
++  - source: salt://maas/files/curtin_userdata_arm64_generic_bionic
++  - template: jinja
++  - user: root
++  - group: root
++  - mode: 644
++  - context:
++      salt_master_ip: {{ region.salt_master_ip }}
++  - require:
++    - pkg: maas_region_packages
++
+ Configure /root/.pgpass for MAAS:
+   file.managed:
+   - name: /root/.pgpass
 -- 
 2.18.0
 
