@@ -1,0 +1,25 @@
+From 4135f53eeac84657b7fa34cb12fc335d21a6e69b Mon Sep 17 00:00:00 2001
+From: Alexandru Avadanii <Alexandru.Avadanii@enea.com>
+Date: Wed, 16 Oct 2019 15:27:32 +0200
+Subject: [PATCH] fuel: Switch to Ubuntu Bionic
+
+---
+ config/installers/fuel/pod_config.yml.j2 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config/installers/fuel/pod_config.yml.j2 b/config/installers/fuel/pod_config.yml.j2
+index 7f53b59..657bc2c 100644
+--- a/config/installers/fuel/pod_config.yml.j2
++++ b/config/installers/fuel/pod_config.yml.j2
+@@ -32,7 +32,7 @@ parameters:
+             power_type: {{ node.remote_management.type }}
+             power_user: {{ node.remote_management.user }}
+           architecture: {{ node.node.arch | dpkg_arch }}/generic
+-          distro_series: xenial
++          distro_series: bionic
+           hwe_kernel: ${_param:hwe_kernel}
+           {%- if loop.index > nm.cmp001.idx %}
+           disk_layout:
+-- 
+2.18.0
+
