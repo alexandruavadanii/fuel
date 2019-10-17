@@ -1,23 +1,23 @@
-From 51c60f5789454e9cf6f96dcfa71f07d67b07819a Mon Sep 17 00:00:00 2001
+From 49c7fca7ef57554f61e3c178d8272190bc3ae618 Mon Sep 17 00:00:00 2001
 From: Alexandru Avadanii <Alexandru.Avadanii@enea.com>
 Date: Wed, 16 Oct 2019 15:02:39 +0200
 Subject: [PATCH] curtin: Add Bionic support
 
 Signed-off-by: Alexandru Avadanii <Alexandru.Avadanii@enea.com>
 ---
- .../curtin_userdata_amd64_generic_bionic      | 80 +++++++++++++++++++
- .../curtin_userdata_arm64_generic_bionic      | 65 +++++++++++++++
+ .../curtin_userdata_amd64_generic_bionic      | 81 +++++++++++++++++++
+ .../curtin_userdata_arm64_generic_bionic      | 66 +++++++++++++++
  maas/region.sls                               | 24 ++++++
- 3 files changed, 169 insertions(+)
+ 3 files changed, 171 insertions(+)
  create mode 100644 maas/files/curtin_userdata_amd64_generic_bionic
  create mode 100644 maas/files/curtin_userdata_arm64_generic_bionic
 
 diff --git a/maas/files/curtin_userdata_amd64_generic_bionic b/maas/files/curtin_userdata_amd64_generic_bionic
 new file mode 100644
-index 0000000..0b6fd15
+index 0000000..e9b22a2
 --- /dev/null
 +++ b/maas/files/curtin_userdata_amd64_generic_bionic
-@@ -0,0 +1,80 @@
+@@ -0,0 +1,81 @@
 +{%- from "maas/map.jinja" import cluster with context %}
 +{%- raw %}
 +#cloud-config
@@ -74,9 +74,10 @@ index 0000000..0b6fd15
 +  salt_22_bionic_nplan_mask: ["curtin", "in-target", "--", "systemctl", "mask", "systemd-networkd.socket", "systemd-networkd", "networkd-dispatcher", "systemd-networkd-wait-online", "systemd-resolved"]
 +  salt_23_bionic_nplan_purge: ["curtin", "in-target", "--", "apt", "--assume-yes", "purge", "nplan", "netplan.io"]
 +  salt_24_bionic_interfaces: ["curtin", "in-target", "--", "sh", "-c", "echo 'source /etc/network/interfaces.d/*' >> /etc/network/interfaces"]
-+  salt_25_bionic_networking_unmask: ["curtin", "in-target", "--", "systemctl", "unmask", "networking.service"]
-+  salt_26_bionic_networking_enable: ["curtin", "in-target", "--", "systemctl", "enable", "networking.service"]
-+  salt_27_bionic_networking_start: ["curtin", "in-target", "--", "systemctl", "start", "networking.service"]
++  salt_25_bionic_resolv: ["curtin", "in-target", "--", "sh", "-c", "echo 'nameserver {{ pillar.maas.region.maas_config.upstream_dns }}' > /etc/resolv.conf"]
++  salt_26_bionic_networking_unmask: ["curtin", "in-target", "--", "systemctl", "unmask", "networking.service"]
++  salt_27_bionic_networking_enable: ["curtin", "in-target", "--", "systemctl", "enable", "networking.service"]
++  salt_28_bionic_networking_start: ["curtin", "in-target", "--", "systemctl", "start", "networking.service"]
 +
 +{%- if salt['pillar.get']('maas:cluster:curtin_vars:amd64:bionic:kernel_package:enabled')|default(false)  %}
 +kernel:
@@ -100,10 +101,10 @@ index 0000000..0b6fd15
 +#}
 diff --git a/maas/files/curtin_userdata_arm64_generic_bionic b/maas/files/curtin_userdata_arm64_generic_bionic
 new file mode 100644
-index 0000000..c7cb997
+index 0000000..16cfd76
 --- /dev/null
 +++ b/maas/files/curtin_userdata_arm64_generic_bionic
-@@ -0,0 +1,65 @@
+@@ -0,0 +1,66 @@
 +{%- from "maas/map.jinja" import cluster with context %}
 +{% raw %}
 +#cloud-config
@@ -154,9 +155,10 @@ index 0000000..c7cb997
 +  salt_22_bionic_nplan_mask: ["curtin", "in-target", "--", "systemctl", "mask", "systemd-networkd.socket", "systemd-networkd", "networkd-dispatcher", "systemd-networkd-wait-online", "systemd-resolved"]
 +  salt_23_bionic_nplan_purge: ["curtin", "in-target", "--", "apt", "--assume-yes", "purge", "nplan", "netplan.io"]
 +  salt_24_bionic_interfaces: ["curtin", "in-target", "--", "sh", "-c", "echo 'source /etc/network/interfaces.d/*' >> /etc/network/interfaces"]
-+  salt_25_bionic_networking_unmask: ["curtin", "in-target", "--", "systemctl", "unmask", "networking.service"]
-+  salt_26_bionic_networking_enable: ["curtin", "in-target", "--", "systemctl", "enable", "networking.service"]
-+  salt_27_bionic_networking_start: ["curtin", "in-target", "--", "systemctl", "start", "networking.service"]
++  salt_25_bionic_resolv: ["curtin", "in-target", "--", "sh", "-c", "echo 'nameserver {{ pillar.maas.region.maas_config.upstream_dns }}' > /etc/resolv.conf"]
++  salt_26_bionic_networking_unmask: ["curtin", "in-target", "--", "systemctl", "unmask", "networking.service"]
++  salt_27_bionic_networking_enable: ["curtin", "in-target", "--", "systemctl", "enable", "networking.service"]
++  salt_28_bionic_networking_start: ["curtin", "in-target", "--", "systemctl", "start", "networking.service"]
 +
 +{% raw %}
 +{{if third_party_drivers and driver}}
