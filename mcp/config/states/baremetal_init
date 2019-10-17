@@ -27,6 +27,7 @@ salt -C "${cluster_nodes_query}" file.replace $debian_ip_source \
 
 salt -C "${cluster_nodes_query}" pkg.install force_yes=true bridge-utils,python-jinja2
 salt -C "${cluster_nodes_query}" state.apply linux.system.repo
+salt -C "${cluster_nodes_query}" service.restart salt-minion
 wait_for 5.0 "salt -C '${cluster_nodes_query}' state.apply salt.minion"
 wait_for 5.0 "salt -C '${cluster_nodes_query}' state.apply linux,ntp"
 wait_for 30.0 "salt -C '${cluster_nodes_query}' test.ping"
