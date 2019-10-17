@@ -53,6 +53,7 @@ parameters:
       unix_sock_group: libvirt
   salt:
     control:
+      virt_service: libvirtd
       size:  # RAM 4096,8192,16384,32768,65536
         # Default production sizing
         openstack.control:
