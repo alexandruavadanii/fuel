@@ -1,0 +1,83 @@
+From: Alexandru Avadanii <Alexandru.Avadanii@enea.com>
+Date: Fri, 8 May 2020 16:06:38 +0200
+Subject: [PATCH] fuel: intel-pod18 SR-IOV configuration
+
+Extend IDF yaml schema for Fuel SR-IOV configuration accordingly.
+
+While at it, cleanup obsolete entries for bridge configuration in the
+IDF.
+
+Change-Id: Ifcb13fc3555af137fd91c7bef7ffccbfe1c52a36
+Signed-off-by: Alexandru Avadanii <Alexandru.Avadanii@enea.com>
+---
+ config/pdf/idf-pod1.schema.yaml | 16 ++++++++++++++++
+ labs/intel/idf-pod18.yaml       | 18 ++++++++++++++++--
+ 2 files changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/config/pdf/idf-pod1.schema.yaml b/config/pdf/idf-pod1.schema.yaml
+index 7546279..b078a80 100644
+--- a/config/pdf/idf-pod1.schema.yaml
++++ b/config/pdf/idf-pod1.schema.yaml
+@@ -136,6 +136,22 @@ definitions:
+                                    'compute_ovs_dpdk_socket_mem',
+                                    'compute_ovs_dpdk_lcore_mask']
+                         additionalProperties: false
++                      sriov:  # Optional
++                        type: 'object'
++                        properties:
++                          sriov_nic01_device_name:
++                            type: 'string'
++                          sriov_nic01_numvfs:
++                            type: ['string', 'number']
++                          sriov_nic01_physical_network:
++                            type: 'string'
++                          sriov_unsafe_interrupts:
++                            type: ['string', 'boolean']
++                        required: ['sriov_nic01_device_name',
++                                   'sriov_nic01_numvfs',
++                                   'sriov_nic01_physical_network',
++                                   'sriov_unsafe_interrupts']
++                        additionalProperties: false
+                     additionalProperties: false
+                 required: ['compute_params']
+                 additionalProperties: false
+diff --git a/labs/intel/idf-pod18.yaml b/labs/intel/idf-pod18.yaml
+index e219e3b..e078228 100644
+--- a/labs/intel/idf-pod18.yaml
++++ b/labs/intel/idf-pod18.yaml
+@@ -21,7 +21,6 @@ idf:
+       vlan: native
+       network: 10.10.181.0
+       mask: 24
+-      bridge: brAdm
+     mgmt:  # data
+       interface: 2
+       vlan: 184
+@@ -38,7 +37,6 @@ idf:
+       vlan: 1000-1030
+       network: 10.10.182.0
+       mask: 24
+-      bridge: brExt
+     public:  # public
+       interface: 3
+       vlan: 1183
+@@ -101,3 +99,19 @@ idf:
+             - '0000:05:00.1'
+             - '0000:05:00.2'
+             - '0000:05:00.3'
++    reclass:
++      node:
++        - compute_params: &compute_params
++            common:
++              compute_hugepages_size: 1G
++              compute_hugepages_count: 16
++              compute_hugepages_mount: /mnt/hugepages_1G
++            sriov:
++              sriov_nic01_device_name: 'ens785f1'
++              sriov_nic01_numvfs: 7
++              sriov_nic01_physical_network: physnet3
++              sriov_unsafe_interrupts: False
++        - compute_params: *compute_params
++        - compute_params: *compute_params
++        - compute_params: *compute_params
++        - compute_params: *compute_params

@@ -49,6 +49,9 @@ classes:
   - cluster.all-mcp-arch-common.opnfv.maas_proxy
   - cluster.all-mcp-arch-common.opnfv.lab_proxy_pdf
 {%- endif %}
+{%- if '-sriov-' in conf.MCP_DEPLOY_SCENARIO %}
+  - system.neutron.control.openvswitch.sriov
+{%- endif %}
 parameters:
   _param:
 {%- if not conf.MCP_VCP %}

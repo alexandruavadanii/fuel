@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 2018 Mirantis Inc., Enea AB and others.
+# Copyright (c) 2020 Mirantis Inc., Enea AB and others.
 # All rights reserved. This program and the accompanying materials
 # are made available under the terms of the Apache License, Version 2.0
 # which accompanies this distribution, and is available at
@@ -12,6 +12,10 @@
 {%- set nics = { nm.cmp001.nic_mgmt: True } %}
 {%- set vlans = { nm.vlan_mgmt: nm.cmp001.nic_mgmt } %}
 ---
+{%- if '-sriov-' in conf.MCP_DEPLOY_SCENARIO %}
+classes:
+  - system.neutron.compute.nfv.sriov
+{%- endif %}
 parameters:
   _param:
     # Should later be determined via PDF/IDF, AArch64 has ESP on /dev/sda1

@@ -111,6 +111,22 @@ parameters:
             compute_hugepages_count: 16
             compute_hugepages_mount: /mnt/hugepages_1G
     {%- endif %}
+    {#- SR-IOV specific configuration, if applicable; no partial defaults #}
+    {%- if '-sriov-' in conf.MCP_DEPLOY_SCENARIO %}
+      {%- if conf.idf.fuel.reclass is defined and
+             conf.idf.fuel.reclass.node[i].compute_params.sriov is defined %}
+        {%- set _sriov = conf.idf.fuel.reclass.node[i].compute_params.sriov %}
+        {%- for _i in _sriov %}
+            {{ _i }}: '"{{ _sriov[_i] }}"'
+        {%- endfor %}
+      {%- else %}
+            {#- Provide some sensible defaults - use the 'private' network interface for SR-IOV #}
+            sriov_nic01_device_name: {{ conf.idf.fuel.network.node[i].interfaces[nm.idx_private] }}
+            sriov_nic01_numvfs: 7
+            sriov_nic01_physical_network: physnet3
+            sriov_unsafe_interrupts: False
+      {%- endif %}
+    {%- endif %}
   {%- endif %}
 {%- endfor %}
 {%- endif %}
